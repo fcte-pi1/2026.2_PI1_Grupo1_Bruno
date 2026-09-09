@@ -6,22 +6,46 @@
 
 ### Dados do projeto
 
-- **Nome do Projeto:** ..
-- **Data de Início:**
-- **Data de Término:**
+- **Nome do Projeto:** MicroPreá
+- **Data de Início:** 09/09/2026
+- **Data de Término:** 20/11/2026
 - **Patrocinador:** Universidade de Brasília
 
 
 ### Objetivos
 
-> O que a grupo pretende obter com a realização do projeto. Descrever o que se pretende realizar para resolver o problema central ou explorar a oportunidade identificada. Para a correta definição do objetivo siga a regra "SMART":
->
-> - **_Specific_ (específico):** Deve ser redigido de forma clara, concisa e compreensiva;
-> - **_Measurable_ (mensurável):** O objetivo específico deve ser mensurável, ou seja, possível de ser medido por meio de um ou mais indicadores;
-> - **_Agreed_ (acordado):** Deve ser acordado com as partes interessadas, ou seja, as áreas envolvidas na empresa: P&D, Produção, Comercial, Marketing, Financeira, Jurídica, Manutenção, ambiental, entre outras;
-> - **_Realistic_ (realista):** Deve estar centrado na realidade, no que é possível de ser feito considerando as premissas e restrições existentes, como: orçamento e tempo;
-> - **_Time Bound_ (Limitado no tempo):** Deve ter um prazo determinado para sua finalização.
+> O que o grupo pretende obter com a realização do projeto. Descrever o que se pretende realizar para resolver o problema central ou explorar a oportunidade identificada. Para a correta definição do objetivo, siga a regra "SMART":
 
+- **_Specific_ (específico):** Deve ser redigido de forma clara, concisa e compreensiva.
+  
+  O projeto tem como objetivo projetar, construir e programar um mini robô autônomo (mini rato) capaz de navegar e alcançar com sucesso a saída de 3 labirintos distintos, integrando o trabalho das equipes de software, hardware e estrutura.
+
+- **_Measurable_ (mensurável):** O objetivo específico deve ser mensurável, ou seja, possível de ser medido por meio de um ou mais indicadores.
+  
+  O sucesso do projeto será mensurado por meio dos seguintes indicadores de desempenho:
+  - **Taxa de conclusão dos labirintos:** Alcance da saída em 100% dos 3 labirintos distintos (3/3), sem necessidade de intervenção manual humana durante o percurso.
+  - **Integração dos subsistemas:** Validação funcional completa das 3 frentes de trabalho (estrutura física funcional e dentro do gabarito, circuito elétrico/hardware sem falhas de alimentação e software executando o algoritmo de navegação).
+  - **Confiabilidade:** Conclusão do percurso dentro de um tempo limite determinado pela disciplina em pelo menos 3 testes consecutivos para cada labirinto.
+
+- **_Agreed_ (acordado):** Deve ser acordado com as partes interessadas, ou seja, as áreas envolvidas na empresa: P&D, Produção, Comercial, Marketing, Financeira, Jurídica, Manutenção, ambiental, entre outras.
+  
+  O escopo e os objetivos do projeto foram alinhados e consensuados entre as 3 frentes de trabalho da equipe (Software, Hardware e Estrutura), alocando responsabilidades claras para os 19 integrantes, e em concordância com os requisitos estabelecidos pelos professores e orientadores da disciplina.
+
+- **_Realistic_ (realista):** Deve estar centrado na realidade, no que é possível de ser feito considerando as premissas e restrições existentes, como: orçamento e tempo.
+  
+  O objetivo é viável e atingível considerando as seguintes premissas e restrições:
+  - **Divisão de trabalho eficiente:** A distribuição dos 19 integrantes em 3 subequipes especializadas (Software, Hardware e Estrutura) permite a execução de atividades em paralelo, otimizando o fluxo de desenvolvimento.
+  - **Escopo focado:** A meta está delimitada à resolução de 3 labirintos com tecnologia adequada e acessível (sensores de navegação e algoritmos de mapeamento/desvio de obstáculos).
+  - **Gestão da carga horária:** O cronograma e o nível de complexidade do robô consideram a rotina acadêmica dos estudantes e a dedicação concomitante a outras disciplinas da faculdade.
+
+- **_Time Bound_ (limitado no tempo):** Deve ter um prazo determinado para sua finalização.
+  
+  O projeto tem como prazo final de entrega o dia **28 de novembro de 2026** e apresentação no dia **02 de dezembro de 2026**, com etapas intermediárias organizadas para garantir o cumprimento do cronograma diante das restrições de tempo da faculdade:
+  - **Prazo Final:** Finalização completa do protótipo e testes de validação até dia 28/11.
+  - **Marcos Intermediários (*Milestones*):**
+    - **Fase 1:** Validação do design estrutural e escolha dos componentes de hardware.
+    - **Fase 2:** Montagem do chassi e desenvolvimento inicial dos algoritmos de navegação (software).
+    - **Fase 3:** Integração entre hardware, software e estrutura para testes práticos nos labirintos e ajustes finos até a data limite.
 ### Público-Alvo
 
 > Pessoas, empresas, instituições etc. que podem usufruir dos produtos, serviços e resultados gerados pelo projeto, cujos requisitos (tópico abaixo) devem atender as suas necessidades. Podem ser internas ou externas à organização, mas, merecem destaque especial, pois, o projeto está sendo feito para atendê-los de forma direta ou indireta.
@@ -51,8 +75,8 @@
 | João Marcelo Guimarães Costa Naves | 232014709 | Engenharia de Software | joaomarcelogcn@gmail.com | Hardware |
 | João Paulo Oliveira César| 242004760 | Engenharia de Software | jp.oliveiracesar@gmail.com| Software |
 | João Paulo Pires Silva | 251010909 | Engenharia de Software | joaopaulojppsa@gmail.com | Software |
-| Kaio Amory | 241012276 | Engenharia de Software | kaioamory8968@gmail.com | Hardware |
-| Otávio | 242004911| Engenharia de Software |otaviodepaivaa@gmail.com | Software |
+| Kaio Amory Sasaki | 241012276 | Engenharia de Software | kaioamory8968@gmail.com | Hardware |
+| Otávio De Paiva| 242004911| Engenharia de Software |otaviodepaivaa@gmail.com | Software |
 | Paulo Renato Medrado Roque | 221035068 | Engenharia Automotiva | pmedrado15@gmail.com | Estrutura |
 | Pietro Calegari Visentin | 232014754  | Engenharia de Software | pietrocvisentin@gmail.com | Software |
 | Tamires Lima Araújo | 241037551 | Engenharia Aeroespacial | | Sub-líder de Estrutura|
