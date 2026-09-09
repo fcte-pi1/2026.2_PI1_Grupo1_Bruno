@@ -26,6 +26,12 @@
 
 > Pessoas, empresas, instituições etc. que podem usufruir dos produtos, serviços e resultados gerados pelo projeto, cujos requisitos (tópico abaixo) devem atender as suas necessidades. Podem ser internas ou externas à organização, mas, merecem destaque especial, pois, o projeto está sendo feito para atendê-los de forma direta ou indireta.
 
+1. Professores Avaliadores da FCTE (Clientes do Projeto):
+Atuam como os clientes diretos e principais stakeholders externos ao grupo. Eles são os responsáveis por definir os requisitos e restrições do desafio. Este público usufruirá do sistema web desenvolvido para realizar consultas no banco de dados e verificar, em tempo real, se o micromouse cumpriu os desafios e atingiu as metas de desempenho nos labirintos durante os testes de integração e a apresentação final.
+
+2. Equipe de Desenvolvimento do Grupo (Usuários Internos)
+Os próprios membros do grupo são um público-alvo direto do ecossistema criado. A equipe utilizará a pista simplificada de 4x4 desenvolvida para testes internos e será a principal usuária do sistema web para monitorar a telemetria do robô (trajeto, consumo de bateria, velocidade média e tempo de conclusão) durante a fase de construção e ajustes do micromouse.
+
 ### Descrição do Problema
 
 > Informar o problema ou a oportunidade (necessidade) que justifica o porquê de o projeto ser realizado. Por exemplo: atende uma demanda específica do consumidor final; supre uma necessidade do mercado comercializador; é um diferencial X para o órgão regulamentador.
