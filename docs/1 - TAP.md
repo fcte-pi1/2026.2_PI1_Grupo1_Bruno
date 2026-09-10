@@ -60,6 +60,10 @@ Os próprios membros do grupo são um público-alvo direto do ecossistema criado
 
 > Informar o problema ou a oportunidade (necessidade) que justifica o porquê de o projeto ser realizado. Por exemplo: atende uma demanda específica do consumidor final; supre uma necessidade do mercado comercializador; é um diferencial X para o órgão regulamentador.
 
+O projeto surge da oportunidade de solucionar um desafio clássico e global de robótica: a navegação autônoma em ambientes desconhecidos, inspirada nas competições de micromouse realizadas anualmente no mundo inteiro. O problema central consiste em criar um robô capaz de explorar, descobrir paredes, mapear trajetos e encontrar o objetivo final em labirintos de formatos não conhecidos previamente pelas equipes, operando de forma autônoma e sem qualquer intervenção humana.
+
+Essa necessidade atende, em primeiro lugar, à demanda do consumidor final do projeto: os professores avaliadores da FCTE, que precisam de um meio confiável para verificar, em tempo real, se o robô cumpriu os desafios propostos. Para isso, é necessário capturar, transmitir e exibir os dados de telemetria do robô (trajeto no labirinto, consumo de bateria, velocidade média e tempo) por meio de um sistema web, além de armazená-los em um banco de dados que permita consultas estruturadas de desempenho.
+
 ### Indicadores
 
 > Listar até 10 indicadores que determinam o mercado consumidor do produto desenvolvido: exemplo: 1) nº de alunos da FGA que utilizam ônibus às 18:00; 2) nº de usuários do restaurante universitários, 3) número de idosos classificados como público-alvo no DF e no estado de Goiás, 4) nº de empresas de segurança registradas no DF etc.
