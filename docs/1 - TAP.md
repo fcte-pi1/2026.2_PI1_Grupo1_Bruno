@@ -68,6 +68,11 @@ Essa necessidade atende, em primeiro lugar, à demanda do consumidor final do pr
 
 > Listar até 10 indicadores que determinam o mercado consumidor do produto desenvolvido: exemplo: 1) nº de alunos da FGA que utilizam ônibus às 18:00; 2) nº de usuários do restaurante universitários, 3) número de idosos classificados como público-alvo no DF e no estado de Goiás, 4) nº de empresas de segurança registradas no DF etc.
 
+1) Número de instituições de ensino com cursos de Engenharia
+2) Número de instituições de ensino com projetos ou laboratórios de robótica
+3) Número de estudantes envolvidos com robótica e programação 
+4) Número de competições e eventos de robótica realizados anualmente 
+5) Número de equipes participantes de competições de robótica
 ### Membros da Equipe
 
 | **Nome** | **Matrícula** | **Curso** | **E-mail** | **Funções** |
@@ -96,12 +101,11 @@ Essa necessidade atende, em primeiro lugar, à demanda do consumidor final do pr
 
 ### Orçamento estimado (R$)
 
-Discutam dentro da equipe a verba possível disponível para o desenvolvimento do projeto, com base na complexidade do projeto, na quantidade de membros e na realidade de cada um.
+Orçamento estimado de R$1020,00.
 
 ### Duração estimada (horas)
 
-Estimem com sinceridade o tempo a ser despendido no desenvolvimento do projeto, com base na complexidade do projeto, na quantidade de membros e na realidade de cada um.
-
+Duração estimada de 100 horas totais.
 
 
 
