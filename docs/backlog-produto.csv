@@ -1,0 +1,24 @@
+ID,Título,Épico,Prioridade (MoSCoW),Status,Link GitHub Projects
+HU-01,Resolver o labirinto sem intervenção humana,Épico-01 - Navegação autônoma,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256467
+HU-02,Executar os movimentos da rota planejada,Épico-01 - Navegação autônoma,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256504
+HU-03,Detectar a chegada à área objetivo,Épico-01 - Navegação autônoma,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256540
+HU-04,Detectar paredes ao redor do Micromouse,Épico-02 - Percepção e localização,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256567
+HU-05,Atualizar a posição do Micromouse no labirinto,Épico-02 - Percepção e localização,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256597
+HU-06,Manter a orientação do Micromouse,Épico-02 - Percepção e localização,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256642
+HU-07,Construir o mapa do labirinto,Épico-03 - Mapeamento e planejamento de rota,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256675
+HU-08,Atualizar o mapa com novas paredes,Épico-03 - Mapeamento e planejamento de rota,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256712
+HU-09,Planejar a rota até a área objetivo,Épico-03 - Mapeamento e planejamento de rota,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256748
+HU-10,Replanejar a rota ao descobrir bloqueios,Épico-03 - Mapeamento e planejamento de rota,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256789
+HU-11,Registrar o trajeto percorrido,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256822
+HU-12,Registrar a velocidade do Micromouse,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256857
+HU-13,Registrar o consumo e o nível da bateria,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256901
+HU-14,Cronometrar o desafio,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256931
+HU-15,Identificar o labirinto em execução,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257256977
+HU-16,Registrar o resultado do desafio,Épico-04 - Registro dos dados do desafio,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257019
+HU-17,Transmitir a telemetria para o sistema web,Épico-05 - Telemetria em tempo real,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257074
+HU-18,Acompanhar o desafio em tempo real,Épico-05 - Telemetria em tempo real,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257123
+HU-19,Visualizar o estado da conexão com o Micromouse,Épico-05 - Telemetria em tempo real,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257167
+HU-20,Armazenar o resultado final de cada desafio,Épico-06 - Armazenamento e consulta de resultados,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257210
+HU-21,Consultar resultados por labirinto,Épico-06 - Armazenamento e consulta de resultados,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257262
+HU-22,Consultar resultados de todos os labirintos,Épico-06 - Armazenamento e consulta de resultados,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257315
+HU-23,Rever os dados de uma execução concluída,Épico-06 - Armazenamento e consulta de resultados,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257362
