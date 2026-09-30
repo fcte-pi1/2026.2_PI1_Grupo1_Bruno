@@ -22,3 +22,18 @@ HU-20,Armazenar o resultado final de cada desafio,Épico-06 - Armazenamento e co
 HU-21,Consultar resultados por labirinto,Épico-06 - Armazenamento e consulta de resultados,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257262
 HU-22,Consultar resultados de todos os labirintos,Épico-06 - Armazenamento e consulta de resultados,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257315
 HU-23,Rever os dados de uma execução concluída,Épico-06 - Armazenamento e consulta de resultados,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31?pane=issue&itemId=257257362
+HU-24,Suportar e integrar os componentes,Épico-07 - Estrutura do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258810670
+HU-25,Permitir que o Micromouse percorra a pista,Épico-07 - Estrutura do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258811812
+HU-26,Proteger os componentes eletrônicos,Épico-07 - Estrutura do Micromouse,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258812355
+HU-27,Permitir a substituição e atualização de módulos,Épico-07 - Estrutura do Micromouse,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258812685
+HU-28,Construir o percurso para testes,Épico-07 - Estrutura do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258812965
+HU-29,Mapear o percurso com sensores,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258813295
+HU-30,Controlar individualmente a velocidade dos motores,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258813753
+HU-31,Comunicar os dados do robô sem fio,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258814019
+HU-32,Informar o consumo da bateria em tempo real,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258814243
+HU-33,Movimentar o Micromouse por meio dos motores,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258814589
+HU-34,Centralizar o Micromouse nos corredores,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258814962
+HU-35,Executar rotações de 90° e 180°,Épico-08 - Hardware do Micromouse,Must,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258815215
+HU-36,Iniciar e interromper a navegação por botão físico,Épico-08 - Hardware do Micromouse,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258816310
+HU-37,Emitir alarme ao atingir a área objetivo,Épico-08 - Hardware do Micromouse,Could,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258816900
+HU-38,Manter o Micromouse em operação por no mínimo 30 minutos,Épico-09 - Energia do Micromouse,Should,Backlog do Produto,https://github.com/orgs/fcte-pi1/projects/31/views/1?pane=issue&itemId=258817740
