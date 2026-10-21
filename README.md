@@ -24,7 +24,7 @@ O Micromouse será desenvolvido de forma modular, permitindo que os subgrupos tr
 | João Paulo Oliveira César | 242004760 | Engenharia de Software | Software |
 | João Paulo Pires Silva | 251010909 | Engenharia de Software | Software |
 | Kaio Amory | 241012276 | Engenharia de Software | Hardware |
-| Otávio | 242004911 | Engenharia de Software | Software |
+| Otávio de Paiva Menezes Teixeira | 242004911 | Engenharia de Software | Software |
 | Paulo Renato Medrado Roque | 221035068 | Engenharia Automotiva | Estrutura |
 | Pietro Calegari Visentin | 232014754 | Engenharia de Software | Software |
 | Tamires Lima Araújo | 241037551 | Engenharia Aeroespacial | Sub-líder de Estrutura |
