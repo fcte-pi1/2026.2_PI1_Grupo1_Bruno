@@ -1,6 +1,19 @@
 # _Firmware_
 Esta pasta deverá armazenar arquivos referentes a:
 
+## FW09 / FW10 — Telemetria
+
+- [Emissor serial e núcleo portátil](TELEMETRY.md): fila limitada, 10 Hz,
+  escrita parcial e demonstração sem placa.
+- [Adaptador Wi-Fi/TCP STA](WIFI.md): conexão local, timeout e backoff.
+- [Contrato compartilhado v1](../../docs/protocolo/README.md): eventos,
+  leituras, mapa, comandos reservados e limites do transporte.
+- [Receptor Python e captura](../telemetria/README.md): serial ou servidor TCP,
+  reprodução e painel.
+
+Os testes usam simulação e sockets locais. Placa, pinagem e controle físico
+dependem das integrações das demais equipes; não estão validados fisicamente.
+
 ## FW12 - Flood Fill
 
 ### Testes (sem hardware)
