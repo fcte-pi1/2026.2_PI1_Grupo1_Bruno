@@ -1,0 +1,183 @@
+[
+  {
+    "caso": "versão incompatível",
+    "pacote": {
+      "schema_version": 2,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "sequência booleana",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": true,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "tempo em string",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": "100",
+      "event": "start",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "evento desconhecido",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "debug",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "campo desconhecido",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando",
+      "debug": "mensagem"
+    }
+  },
+  {
+    "caso": "start sem run",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": null,
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "fault sem descrição",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "fault",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "map_update sem mapa",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "map_update",
+      "state": "executando"
+    }
+  },
+  {
+    "caso": "bateria com unidade de distância",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando",
+      "battery_voltage": {
+        "value": 8.1,
+        "unit": "cm",
+        "source": "simulated",
+        "valid": true
+      }
+    }
+  },
+  {
+    "caso": "leitura numérica como string",
+    "pacote": {
+      "schema_version": 1,
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "maze_id": "4x4",
+      "seq": 0,
+      "t_ms": 0,
+      "event": "start",
+      "state": "executando",
+      "battery_voltage": {
+        "value": "8.1",
+        "unit": "V",
+        "source": "simulated",
+        "valid": true
+      }
+    }
+  },
+  {
+    "caso": "comando não permitido",
+    "pacote": {
+      "schema_version": 1,
+      "kind": "command",
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "command_id": "cmd-001",
+      "command": "set_pwm",
+      "expires_at_ms": 1300
+    }
+  },
+  {
+    "caso": "ACK incoerente",
+    "pacote": {
+      "schema_version": 1,
+      "kind": "ack",
+      "robot_id": "micromouse-01",
+      "boot_id": "boot-a",
+      "run_id": "run-001",
+      "command_id": "cmd-001",
+      "status": "error",
+      "error": null,
+      "state": "executando",
+      "t_ms": 350
+    }
+  }
+]
