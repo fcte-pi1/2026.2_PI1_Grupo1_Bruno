@@ -55,4 +55,8 @@ Os padrões de colaboração do projeto estão descritos nos arquivos abaixo:
 
 ## Status
 
-Projeto em fase inicial de estruturação. A telemetria já começou a ser montada em outro repositório e poderá ser integrada ou referenciada futuramente conforme a arquitetura do sistema evoluir.
+O [contrato v1 de telemetria e comandos](docs/protocolo/README.md) integra o
+[painel e receptor Python](src/telemetria/README.md) ao emissor
+[serial](src/firmware/TELEMETRY.md) ou [Wi-Fi/TCP](src/firmware/WIFI.md).
+Há fontes simuladas, captura/reprodução e testes sem hardware. A validação
+na ESP32 e no robô permanece pendente; veja as [evidências](docs/protocolo/VALIDACAO.md).
