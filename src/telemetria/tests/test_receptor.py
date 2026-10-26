@@ -54,7 +54,7 @@ def test_rejeita_invalida_e_aceita_proxima(invalida):
 @pytest.mark.parametrize(
     ("antes", "depois"),
     [
-        (b'"schema_version":1', b'"schema_version":2'),
+        (b'"schema_version":1', b'"schema_version":3'),
         (b'"seq":1', b'"seq":"1"'),
         (b'"t_ms":0', b'"t_ms":NaN'),
         (b'"t_ms":0', b'"t_ms":-1'),
@@ -164,7 +164,7 @@ async def test_tcp_localhost_fragmentacao_reconexao_sem_inventar_start():
         await escritor2.drain()
         frame2 = await asyncio.wait_for(anext(eventos), 2)
         assert frame2.run_id == frame.run_id and frame2.seq == 5
-        # Fechar a fonte deve fechar socket, inclusive com cliente silencioso.
+        # fechar a fonte deve fechar socket, inclusive com cliente silencioso.
     assert await asyncio.wait_for(leitor2.read(), 2) == b""
     escritor2.close()
     await escritor2.wait_closed()
@@ -194,7 +194,7 @@ async def test_tcp_captura_indisponivel_continua_recebendo_e_fecha_em_sobrecarga
         await escritor.drain()
         assert isinstance(await asyncio.wait_for(anext(eventos), 2), Frame)
         assert captura.saturada
-        # Crítico enche fila e o EOF coloca outro crítico em backpressure.
+        # crítico enche fila e o eof coloca outro crítico em backpressure.
         escritor.write(linha(2, "finish"))
         await escritor.drain()
         escritor.close()
