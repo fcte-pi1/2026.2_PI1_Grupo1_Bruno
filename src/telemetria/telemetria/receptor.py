@@ -148,9 +148,9 @@ class _FonteReceptora:
         self._rodando = False
 
     async def _receber(self, dados: bytes, decodificador: DecodificadorJSONL) -> None:
-        if self._captura is not None:
-            await self._captura.gravar(dados)
         for frame in decodificador.feed(dados):
+            if self._captura is not None:
+                await self._captura.gravar(frame)
             await self._fila.colocar(frame)
 
     async def _produzir(self) -> None:
@@ -234,12 +234,8 @@ class FonteSerial(_FonteReceptora):
                 await self._fila.colocar(LinkFechado(str(erro)))
             finally:
                 decodificador.finalizar()
-                try:
-                    if porta is not None:
-                        await _thread(porta.close)
-                finally:
-                    if self._captura is not None:
-                        await self._captura.fim_segmento()
+                if porta is not None:
+                    await _thread(porta.close)
             await asyncio.sleep(espera)
             espera = min(10.0, espera * 2)
 
@@ -289,11 +285,8 @@ class FonteTCPListen(_FonteReceptora):
             with suppress(ConnectionError, OSError, TimeoutError):
                 await asyncio.wait_for(escritor.wait_closed(), timeout=1.0)
             try:
-                if aceito:
-                    if self._captura is not None:
-                        await self._captura.fim_segmento()
-                    if not tarefa.cancelling():
-                        await self._fila.colocar(LinkFechado("cliente TCP desconectado"))
+                if aceito and not tarefa.cancelling():
+                    await self._fila.colocar(LinkFechado("cliente TCP desconectado"))
             finally:
                 if aceito:
                     self._cliente_ativo = False

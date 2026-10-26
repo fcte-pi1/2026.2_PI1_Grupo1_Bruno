@@ -3,7 +3,7 @@ import asyncio
 import logging
 from contextlib import aclosing
 
-from telemetria.captura import CapturaBruta, FonteArquivo
+from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.coleta import aplicar, coletar
 from telemetria.estado import EstadoPainel
 from telemetria.fonte_simulada import FonteSimulada
@@ -32,12 +32,10 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     fontes.add_argument(
         "--tcp-listen", type=endereco_tcp, metavar="HOST:PORT", help="PC escuta o ESP32 cliente STA"
     )
-    fontes.add_argument("--arquivo", help="reproduz Frames JSONL ou captura bruta")
+    fontes.add_argument("--arquivo", help="reproduz frames JSONL")
     parser.add_argument("--baud", type=inteiro_positivo, default=115200)
     parser.add_argument("--fila-max", type=inteiro_positivo, default=256)
-    parser.add_argument(
-        "--captura", help="arquivo novo para captura bruta com limites e fronteiras de conexão"
-    )
+    parser.add_argument("--captura", help="arquivo novo para salvar frames validados em JSONL")
     parser.add_argument("--captura-max-bytes", type=inteiro_positivo, default=10 * 1024 * 1024)
     parser.add_argument(
         "--headless", action="store_true", help="sem UI; Frames válidos em stdout, diagnóstico em stderr"
@@ -56,7 +54,7 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
-def criar_fonte(args: argparse.Namespace, captura: CapturaBruta | None = None):
+def criar_fonte(args: argparse.Namespace, captura: CapturaJSONL | None = None):
     if args.serial:
         return FonteSerial(args.serial, args.baud, fila_max=args.fila_max, captura=captura)
     if args.tcp_listen:
@@ -94,7 +92,7 @@ async def headless(fonte, limite: int | None = None, duracao: float | None = Non
 def main() -> None:
     args = argumentos()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
-    captura = CapturaBruta(args.captura, args.captura_max_bytes) if args.captura else None
+    captura = CapturaJSONL(args.captura, args.captura_max_bytes) if args.captura else None
     fonte = criar_fonte(args, captura)
     if args.headless:
 

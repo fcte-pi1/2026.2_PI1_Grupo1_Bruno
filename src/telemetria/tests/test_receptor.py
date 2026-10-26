@@ -179,11 +179,11 @@ def test_json_ambiguo_ou_profundidade_excessiva_nao_derruba_parser(dados):
 
 
 async def test_tcp_captura_indisponivel_continua_recebendo_e_fecha_em_sobrecarga(tmp_path):
-    from telemetria.captura import CapturaBruta
+    from telemetria.captura import CapturaJSONL
 
     caminho = tmp_path / "existente"
     caminho.write_bytes(b"original")
-    captura = CapturaBruta(caminho)
+    captura = CapturaJSONL(caminho)
     fonte = FonteTCPListen("127.0.0.1", 0, fila_max=1, captura=captura)
     async with aclosing(fonte.eventos()) as eventos:
         primeiro = asyncio.create_task(anext(eventos))
@@ -206,11 +206,11 @@ async def test_tcp_captura_indisponivel_continua_recebendo_e_fecha_em_sobrecarga
 
 
 async def test_serial_captura_indisponivel_continua_recebendo_e_fecha_porta(tmp_path, monkeypatch):
-    from telemetria.captura import CapturaBruta
+    from telemetria.captura import CapturaJSONL
 
     caminho = tmp_path / "existente"
     caminho.write_bytes(b"original")
-    captura = CapturaBruta(caminho)
+    captura = CapturaJSONL(caminho)
     porta = serial.serial_for_url("loop://", timeout=0.02)
     monkeypatch.setattr(serial, "serial_for_url", lambda *args, **kwargs: porta)
     fonte = FonteSerial("loop://", timeout_s=0.02, captura=captura)

@@ -10,10 +10,10 @@ O ambiente virtual de teste fica fora do clone; não é versionado.
 | Verificação | Resultado observado |
 | --- | --- |
 | Suíte de telemetria, painel e integração TCP com firmware | **112 passed** |
-| Núcleo portátil e adaptador Wi-Fi/TCP | **33 testes, OK**, sem skips |
+| Núcleo portátil e adaptador Wi-Fi/TCP | **35 testes, OK**, sem skips |
 | Regressão do Flood Fill existente | **7 casos, todos passaram** |
 | Ruff / formatação Python da telemetria | Passou; 24 arquivos formatados |
-| Ruff / formatação dos novos módulos de firmware e exportador | Passou; 6 arquivos formatados |
+| Ruff / formatação dos novos módulos de firmware e exportador | Passou; 8 arquivos formatados |
 | `git diff --check` | Passou |
 
 Os números acima incluem testes de contrato e regressões; não são contagens
@@ -25,7 +25,7 @@ O teste do painel usa `nicegui.testing.User`.
 
 | Issue | Implementação e evidência automatizada | Validação física pendente |
 | --- | --- | --- |
-| [#23 / INT03](https://github.com/fcte-pi1/2026.2_PI1_Grupo1_Bruno/issues/23) | Contrato v1, JSON Schema, exemplos válidos/inválidos, modelos estritos, mapa e envelopes de comando/ACK; `test_contrato.py`, `test_modelos.py` | Confirmar placa/pinagem/firmware na INT02 e permissão de início remoto no regulamento |
+| [#23 / INT03](https://github.com/fcte-pi1/2026.2_PI1_Grupo1_Bruno/issues/23) | Contrato v1, JSON Schema, exemplos válidos/inválidos, modelos estritos, mapa e envelopes de comando/ACK; `test_contrato.py`, `test_modelos.py` | Confirmar pinagem/firmware na INT02 e permissão de início remoto no regulamento |
 | [#17 / TEL01](https://github.com/fcte-pi1/2026.2_PI1_Grupo1_Bruno/issues/17) | Parser fragmentado/grande/inválido, fila e timeout, serial/TCP, captura/reprodução, gerador e CLI; testes `test_receptor`, `test_captura`, `test_gerador`, `test_cli` e `test_estado` | Porta UART/USB, baud efetivo, desconexão física e posse da porta na placa |
 | [#11 / FW09](https://github.com/fcte-pi1/2026.2_PI1_Grupo1_Bruno/issues/11) | `test_telemetry.py`: 20 testes, consumidor lento/ausente, perda limitada, prioridade crítica, parciais, monotonicidade e validação cruzada com Pydantic | Duração real de UART.write, orçamento de CPU/RAM e atraso do controle na ESP32 |
 | [#12 / FW10](https://github.com/fcte-pi1/2026.2_PI1_Grupo1_Bruno/issues/12) | `test_wifi_telemetry.py`: 13 testes, AP ausente, backoff/timeout, socket parcial, EAGAIN, app reiniciado e TCP real localhost | Associação STA na placa/rede do desafio, reconexão física, consumo, memória e jitter do controle |
@@ -34,7 +34,8 @@ O teste do painel usa `nicegui.testing.User`.
 firmware portátil** ao **receptor TCP real** no computador, com escrita de
 97 bytes por chamada. Verifica `start/sample/fault/map_update/finish`, sequência,
 mesmo `run_id`, ausência de rejeição do contrato e avanço dos 100 ciclos de
-controle **simulados**. A interface WLAN desse teste é falsa; o socket TCP é real.
+controle **simulados**. A interface WLAN desse teste é falsa; o socket TCP é real. Os frames também
+são capturados em JSONL comum e reproduzidos para conferir a gravação.
 
 As regressões cobrem mensagens antigas de robô/boot/corrida, `finish` terminal
 mesmo após reconexão, cancelamento com fila crítica cheia, arquivos existentes,
@@ -58,11 +59,13 @@ python src/firmware/test_floodfill.py
 ruff check --isolated --select E,F,I --line-length 110 \
   src/firmware/telemetry.py src/firmware/demo_telemetry.py \
   src/firmware/test_telemetry.py src/firmware/wifi_telemetry.py \
-  src/firmware/test_wifi_telemetry.py docs/protocolo/exportar_schema.py
+  src/firmware/test_wifi_telemetry.py src/firmware/board_smoke.py \
+  src/firmware/test_board_smoke.py docs/protocolo/exportar_schema.py
 ruff format --isolated --line-length 110 --check \
   src/firmware/telemetry.py src/firmware/demo_telemetry.py \
   src/firmware/test_telemetry.py src/firmware/wifi_telemetry.py \
-  src/firmware/test_wifi_telemetry.py docs/protocolo/exportar_schema.py
+  src/firmware/test_wifi_telemetry.py src/firmware/board_smoke.py \
+  src/firmware/test_board_smoke.py docs/protocolo/exportar_schema.py
 git diff --check
 ```
 
@@ -72,13 +75,23 @@ O exportador regenera o schema e `test_contrato.py` detecta divergência entre o
 arquivo versionado e os modelos executáveis. Para ensaiar sem UI, veja os
 [comandos do receptor e gerador](../../src/telemetria/README.md).
 
+## Revisão para a primeira conexão
+
+A captura foi simplificada para frames JSONL validados, sem Base64/envelopes.
+O parser da conexão descarta os fragmentos antes de gravar. O script
+`board_smoke.py` e o [guia da S3 N8R2](../../src/firmware/CONEXAO_ESP32_S3.md)
+completam o caminho USB → execução na placa → Wi-Fi/TCP → painel. Os dois
+novos testes usam UART/WLAN falsas e verificam parciais, encerramento e
+heartbeats sem corrida/sensores; não representam validação física.
+
 ## Limites da evidência
 
 Não foi conectada placa ESP32, UART física, sensor, bateria ou robô. O código
 MicroPython foi exercitado em CPython com adaptadores falsos; não foi executado
 em um runtime MicroPython nem gravado na placa. As APIs da versão ESP32
-MicroPython 1.26.0 foram usadas como referência documental, sem fixar o firmware
-da equipe antes de INT02. Os roteiros em [FW09](../../src/firmware/TELEMETRY.md)
+MicroPython 1.26.0 foram usadas como referência documental, sem executar essa versão na placa. A equipe informou o modelo
+ESP32-S3-DevKitC-1 N8R2; a pinagem dos periféricos e o ensaio físico ainda
+precisam ser confirmados. Os roteiros em [FW09](../../src/firmware/TELEMETRY.md)
 e [FW10](../../src/firmware/WIFI.md) descrevem o ensaio de bancada que falta.
 
 Comandos de movimento e ACK são **contrato reservado**, com início remoto

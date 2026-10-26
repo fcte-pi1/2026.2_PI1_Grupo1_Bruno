@@ -1,4 +1,4 @@
-# Copie para wifi_config.py SOMENTE no ESP32 ou em diretório fora do clone.
+# Copie para wifi_config.py neste diretório (ignorado pelo Git) e depois para a placa.
 # Nunca versione o arquivo preenchido com as credenciais da sua rede.
 SSID = "PREENCHER_NO_DISPOSITIVO"
 PASSWORD = "PREENCHER_NO_DISPOSITIVO"

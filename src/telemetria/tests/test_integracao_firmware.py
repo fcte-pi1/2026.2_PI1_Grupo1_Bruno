@@ -5,6 +5,7 @@ import importlib
 from contextlib import aclosing
 from pathlib import Path
 
+from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.coleta import aplicar
 from telemetria.estado import EstadoPainel
 from telemetria.modelos import Frame
@@ -22,12 +23,13 @@ class WlanLocal:
         return True
 
 
-async def test_firmware_tcp_ate_estado_sem_trocar_corrida(monkeypatch):
+async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch, tmp_path):
     pasta = Path(__file__).resolve().parents[2] / "firmware"
     monkeypatch.syspath_prepend(str(pasta))
     core = importlib.import_module("telemetry")
     wifi = importlib.import_module("wifi_telemetry")
-    fonte = FonteTCPListen("127.0.0.1", 0)
+    captura = CapturaJSONL(tmp_path / "bancada.jsonl")
+    fonte = FonteTCPListen("127.0.0.1", 0, captura=captura)
     estado = EstadoPainel()
     recebidos = []
 
@@ -83,8 +85,13 @@ async def test_firmware_tcp_ate_estado_sem_trocar_corrida(monkeypatch):
         assert estado.descartados == 0
         assert fonte.estatisticas.invalidos == fonte.estatisticas.grandes == 0
         assert publisher.stats()["control_cycles"] == 100
+        await captura.fechar()
+        arquivo = FonteArquivo(captura.caminho, rapido=True)
+        reproduzidos = [evento async for evento in arquivo.eventos() if isinstance(evento, Frame)]
+        assert reproduzidos == recebidos
     finally:
         if link is not None:
             link.close()
         consumidor.cancel()
         await asyncio.gather(consumidor, return_exceptions=True)
+        await captura.fechar()

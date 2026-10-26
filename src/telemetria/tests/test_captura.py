@@ -1,48 +1,47 @@
 import asyncio
+import json
 from contextlib import aclosing
 
 import pytest
 
-from telemetria.captura import CapturaBruta, FonteArquivo
+from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.gerador import gerar_frames
 from telemetria.modelos import Frame, LinkFechado
 
 
-async def test_captura_reproduz_frames_fragmentos_invalidos_e_fronteira(tmp_path):
+async def test_captura_e_jsonl_legivel_e_reproduz_frames(tmp_path):
     caminho = tmp_path / "captura.jsonl"
-    captura = CapturaBruta(caminho)
+    captura = CapturaJSONL(caminho)
     frames = list(gerar_frames(duracao_s=0.1))
-    dados = (frames[0].model_dump_json() + "\n").encode()
-    await captura.gravar(b"\xff\n" + dados[:17])
-    await captura.gravar(dados[17:] + dados[:17])
-    await captura.fim_segmento()
-    await captura.gravar((frames[-1].model_dump_json() + "\n").encode())
+    for frame in frames:
+        await captura.gravar(frame)
     await captura.fechar()
     fonte = FonteArquivo(caminho, rapido=True)
     eventos = [evento async for evento in fonte.eventos()]
-    assert [f for f in eventos if isinstance(f, Frame)] == [frames[0], frames[-1]]
-    assert fonte.estatisticas.invalidos == 1
-    assert fonte.estatisticas.incompletos == 1
-    assert len([e for e in eventos if isinstance(e, LinkFechado)]) == 2
+    assert [f for f in eventos if isinstance(f, Frame)] == frames
+    assert all(json.loads(linha)["schema_version"] == 1 for linha in caminho.read_text().splitlines())
+    assert fonte.estatisticas.invalidos == 0
+    assert len([e for e in eventos if isinstance(e, LinkFechado)]) == 1
 
 
 async def test_captura_limita_disco_sem_truncar_registros(tmp_path):
     caminho = tmp_path / "captura.jsonl"
-    captura = CapturaBruta(caminho, max_bytes=200)
-    await captura.gravar(b"abc\n")
+    captura = CapturaJSONL(caminho, max_bytes=512)
+    frames = list(gerar_frames(duracao_s=0.1))
+    await captura.gravar(frames[0])
     tamanho = caminho.stat().st_size
-    await captura.gravar(b"x" * 100_000)
+    await captura.gravar(frames[1])
     await captura.fechar()
     assert captura.saturada
-    assert caminho.stat().st_size == tamanho <= 200
+    assert caminho.stat().st_size == tamanho <= 512
     assert caminho.read_bytes().endswith(b"\n")
 
 
 async def test_captura_nao_sobrescreve_arquivo(tmp_path):
     caminho = tmp_path / "existente"
     caminho.write_bytes(b"original")
-    captura = CapturaBruta(caminho)
-    await captura.gravar(b"abc")
+    captura = CapturaJSONL(caminho)
+    await captura.gravar(next(gerar_frames()))
     assert captura.saturada
     assert caminho.read_bytes() == b"original"
 
@@ -92,12 +91,12 @@ async def test_disco_cheio_suspende_captura(tmp_path):
         def close(self):
             self.fechado = True
 
-    captura = CapturaBruta(tmp_path / "captura")
+    captura = CapturaJSONL(tmp_path / "captura")
     arquivo = DiscoCheio()
     captura._arquivo = arquivo
-    await captura.gravar(b"dados\n")
+    await captura.gravar(next(gerar_frames()))
     assert captura.saturada and arquivo.fechado
-    await captura.gravar(b"proximos\n")
+    await captura.gravar(next(gerar_frames()))
 
 
 async def test_abertura_cancelada_recolhe_e_fecha_recurso(tmp_path, monkeypatch):

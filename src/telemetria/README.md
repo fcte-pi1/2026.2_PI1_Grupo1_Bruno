@@ -2,6 +2,8 @@
 
 Painel local Python (TEL01 #17 e TEL02 #18) com receptor serial/TCP, simulador determinístico, captura e playback. O receptor é passivo: não transmite comandos nem inicia uma execução ao reconectar. Os dados do simulador levam origem `simulated`; medições reais dependem do produtor no robô.
 
+Para usar a **ESP32-S3-DevKitC-1 N8R2**, comece pelo [guia de conexão com a placa](../firmware/CONEXAO_ESP32_S3.md). Ele cobre firmware, USB, Wi-Fi e o primeiro teste sem sensores.
+
 ## Instalação e execução
 
 Requer Python 3.11 ou mais novo. No Linux/macOS:
@@ -41,11 +43,11 @@ A porta serial deve estar livre: feche mpremote, REPL e monitores seriais antes 
 | --- | --- | --- |
 | `--serial PORT` | — | pySerial, inclusive URL `loop://` para testes |
 | `--tcp-listen HOST:PORT` | — | Servidor TCP no PC para ESP32 cliente |
-| `--arquivo PATH` | — | Playback de Frames JSONL ou captura bruta |
+| `--arquivo PATH` | — | Playback de Frames JSONL |
 | `--baud` | 115200 | Baud da serial |
 | `--taxa` | 10 | Hz do simulador/playback; não configura o robô |
 | `--fila-max` | 256 | Máximo de eventos pendentes no receptor |
-| `--captura PATH` | — | Arquivo novo de captura bruta serial/TCP |
+| `--captura PATH` | — | Arquivo novo de captura JSONL serial/TCP |
 | `--captura-max-bytes` | 10485760 | Limite de disco da captura |
 | `--headless` | — | Sem interface; Frames validados em stdout |
 | `--limite N` / `--duracao S` | — | Limita headless por Frames ou tempo |
@@ -75,7 +77,7 @@ python -m telemetria --arquivo fake.jsonl --headless --rapido > validado.jsonl
 Para exercitar TCP com processos separados:
 
 ```bash
-# Terminal 1: receptor com captura bruta limitada
+# Terminal 1: receptor com captura JSONL limitada
 python -m telemetria --tcp-listen 127.0.0.1:8765 --captura captura.jsonl
 # Terminal 2: fake lento (cliente TCP)
 python -m telemetria.gerador --tcp 127.0.0.1:8765 --taxa 2 --duracao 20
@@ -91,7 +93,9 @@ O gerador também emite em stdout quando não recebe `--output` nem `--tcp`. Par
 python -m telemetria --serial /dev/ttyUSB0 --headless --duracao 60 --captura bancada.jsonl > frames.jsonl
 ```
 
-A captura usa envelopes JSONL `capture_version=1`, com `type=data` e bytes em `data_b64`; `type=reset` registra a fronteira de uma conexão. Assim preserva UTF-8 inválido, lixo de REPL, fragmentação e linhas rejeitadas, sem juntar um fragmento de uma conexão com a seguinte. Playback aceita esse formato e JSONL puro de Frames. Reprodução aplica uma taxa escolhida, sem reproduzir os intervalos de relógio da captura. O arquivo headless contém os Frames validados e aceitos pelo mesmo filtro de identidade/ordem do painel; duplicatas e mensagens atrasadas de boots/execuções anteriores são descartadas. A captura bruta mantém inclusive esses dados para diagnóstico.
+A captura salva **somente frames validados**, um objeto JSON por linha, no mesmo formato usado pelo gerador. Não há Base64 ou envelope próprio. Bytes inválidos são rejeitados e contados pelo receptor; fragmentos incompletos são descartados ao desconectar, antes da gravação. Captura e reprodução não misturam fragmentos de conexões diferentes.
+
+O arquivo capturado mantém a ordem recebida, incluindo duplicatas válidas; o filtro de identidade/ordem do painel e do modo headless descarta essas duplicatas e mensagens antigas ao consumir. A reprodução usa uma taxa escolhida, sem reproduzir as pausas da conexão. Capturas experimentais antigas com `capture_version`/Base64 deixam de ser suportadas; não há migração automática.
 
 Cada leitura de transporte tem no máximo 1024 bytes. Cada escrita da captura é aguardada em thread, sem fila ilimitada; uma unidade lenta aplica backpressure ao receptor. Ao atingir o limite de disco, a captura para em uma fronteira de registro e o receptor continua, com aviso em stderr. Erros ao abrir ou escrever também suspendem a captura com diagnóstico em stderr, mantendo a recepção. Um arquivo existente não é sobrescrito. Registros incompletos no EOF são descartados.
 
@@ -125,7 +129,7 @@ A bateria mostra tensão; percentual depende de curva de descarga medida. A cole
 | `estado.py` | Estado, identidade/ordem, histórico e conexão do painel |
 | `coleta.py` | Protocolo `Fonte`: `simulada`, `nome`, `eventos()` assíncrono |
 | `receptor.py` | Parser incremental, fila limitada, serial e servidor TCP |
-| `captura.py` | Captura bruta limitada e fonte de playback |
+| `captura.py` | Captura JSONL limitada e fonte de playback |
 | `fonte_simulada.py` / `gerador.py` | Modelo determinístico e emissor JSONL headless |
 | `formatacao.py` / `painel.py` | Textos, interface NiceGUI e gráfico |
 | `__main__.py` | Seleção de fonte, CLI/UI e encerramento |

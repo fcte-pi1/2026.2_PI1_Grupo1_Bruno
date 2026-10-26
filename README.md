@@ -53,6 +53,10 @@ Os padrões de colaboração do projeto estão descritos nos arquivos abaixo:
 - Separar alterações por contexto para facilitar revisão e histórico.
 - Atualizar a documentação sempre que houver mudança relevante no projeto.
 
+## Conectar a placa
+
+Para a **ESP32-S3-DevKitC-1 N8R2**, siga o [passo a passo de bancada](src/firmware/CONEXAO_ESP32_S3.md). O primeiro teste usa USB para carregar o código e Wi-Fi para chegar ao painel, sem sensores nem motores.
+
 ## Status
 
 O [contrato v1 de telemetria e comandos](docs/protocolo/README.md) integra o
