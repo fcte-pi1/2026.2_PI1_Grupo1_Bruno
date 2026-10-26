@@ -12,6 +12,10 @@ class Fonte(Protocol):
     def eventos(self) -> AsyncIterator[Evento]: ...
 
 
+class Gravador(Protocol):
+    async def gravar(self, frame: Frame) -> None: ...
+
+
 def aplicar(evento: Evento, estado: EstadoPainel) -> None:
     if isinstance(evento, Frame):
         estado.registrar(evento)
@@ -21,6 +25,9 @@ def aplicar(evento: Evento, estado: EstadoPainel) -> None:
         estado.link_fechado(evento.motivo)
 
 
-async def coletar(fonte: Fonte, estado: EstadoPainel) -> None:
+async def coletar(fonte: Fonte, estado: EstadoPainel, gravador: Gravador | None = None) -> None:
     async for evento in fonte.eventos():
+        # O banco recebe todos os frames válidos: ele próprio trata duplicatas e ordem.
+        if gravador is not None and isinstance(evento, Frame):
+            await gravador.gravar(evento)
         aplicar(evento, estado)
