@@ -9,8 +9,7 @@ computador -- USB/mpremote --> ESP32-S3 -- Wi-Fi/TCP --> painel no computador
 ```
 
 Não é necessário comprar adaptador serial para esse caminho. O teste envia
-apenas estado `pronto`, sequência e tempo: comprova comunicação com a placa,
-sem inventar valores de sensores ou iniciar uma corrida.
+apenas estado `pronto`, sequência e tempo para verificar a comunicação com a placa.
 
 ## 1. Preparar o computador
 
@@ -144,11 +143,6 @@ O próximo passo é a aplicação do robô chamar `publisher.sample(...)` com su
 leituras reais e `service(...)` após o controle, como em [FW09](TELEMETRY.md)
 e [FW10](WIFI.md). Esse teste não configura motores, encoders ou sensores, não
 substitui a FW08 e não deve ser copiado como laço de controle.
-
-Até alguém executar estes passos na placa, o resultado continua **pendente de
-bancada**. Registre versão, transporte, duração e resultado; não inclua senha
-da rede. O modelo foi informado pela equipe, mas os testes automatizados deste
-repositório ainda usam o computador e adaptadores falsos.
 
 Referências: [DevKitC-1 N8R2 e pinagem](https://docs.espressif.com/projects/esp-idf/en/v5.0/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1-v1.0.html),
 [firmware S3](https://micropython.org/download/ESP32_GENERIC_S3/),

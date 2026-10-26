@@ -1,4 +1,4 @@
-"""Robô falso determinístico para testar o mesmo caminho JSONL do hardware."""
+"""gerador determinístico de telemetria jsonl."""
 
 import argparse
 import asyncio

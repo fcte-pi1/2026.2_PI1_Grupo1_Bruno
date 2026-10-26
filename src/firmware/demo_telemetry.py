@@ -1,15 +1,14 @@
-"""Deterministic 100 Hz controller / 10 Hz telemetry simulation (no hardware)."""
+"""simulação com controle a 100 hz e telemetria a 10 hz."""
 
 from telemetry import BoundedWriter, TelemetryPublisher, reading
 
 
 def run_simulation(writer, cycles=100, byte_budget=256, boot_id="sim-boot-1"):
-    """Return publisher after a simulated run; writer receives only JSON Lines."""
     now = [0]
     publisher = TelemetryPublisher("sim-robot", boot_id, "sim-run-1", "sim-maze", lambda: now[0])
     publisher.emit("start", "running")
     for cycle in range(cycles):
-        now[0] = cycle * 10  # simulated 100 Hz; no claim of physical timing.
+        now[0] = cycle * 10
         publisher.record_control_cycle(late=False)
         speed = reading(120 + cycle % 5, "mm/s", "simulated")
         target = reading(120, "mm/s", "simulated")
@@ -24,7 +23,7 @@ def run_simulation(writer, cycles=100, byte_budget=256, boot_id="sim-boot-1"):
         publisher.service(writer, byte_budget)
     now[0] = cycles * 10
     publisher.emit("finish", "stopped")
-    # Finite drain for a demo only; never spin waiting for I/O in the controller.
+    # escoa a fila com limite de tentativas ao encerrar a simulação
     for _ in range((publisher.pending_count + 1) * 4097):
         if not publisher.pending_count or not writer.connected:
             break
@@ -34,7 +33,6 @@ def run_simulation(writer, cycles=100, byte_budget=256, boot_id="sim-boot-1"):
 
 
 def uart_writer(uart_id, tx, rx, baudrate=115200):
-    """MicroPython-only adapter; pins must be selected for the actual board."""
     from machine import UART
 
     uart = UART(uart_id, baudrate=baudrate, tx=tx, rx=rx, timeout=0, timeout_char=0, txbuf=512)
@@ -42,7 +40,6 @@ def uart_writer(uart_id, tx, rx, baudrate=115200):
 
 
 def main():
-    # Host-only dependencies stay outside the portable core and hardware path.
     import argparse
     import json
     import sys
