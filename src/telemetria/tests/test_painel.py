@@ -68,3 +68,9 @@ async def test_falha_aparece_no_log(user: User):
     await esperar_renderizacao()
     log = user.find(ui.log).elements.pop()
     assert any("ENCODER_STALL" in linha.text for linha in log.descendants())
+
+
+async def test_link_do_historico_so_aparece_com_banco(user: User):
+    criar_pagina(EstadoPainel(), fonte_simulada=False, intervalo_s=0.1, historico=True)
+    await user.open("/")
+    await user.should_see("Histórico")

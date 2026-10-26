@@ -1,8 +1,10 @@
 import argparse
 import asyncio
 import logging
+import sqlite3
 from contextlib import aclosing
 
+from telemetria.armazenamento import Armazenamento, GravadorAssincrono
 from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.coleta import aplicar, coletar
 from telemetria.estado import EstadoPainel
@@ -37,6 +39,7 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--fila-max", type=inteiro_positivo, default=256)
     parser.add_argument("--captura", help="arquivo novo para salvar frames validados em JSONL")
     parser.add_argument("--captura-max-bytes", type=inteiro_positivo, default=10 * 1024 * 1024)
+    parser.add_argument("--banco", help="arquivo SQLite onde as execuções são salvas (TEL03)")
     parser.add_argument(
         "--headless", action="store_true", help="sem UI; Frames válidos em stdout, diagnóstico em stderr"
     )
@@ -69,13 +72,17 @@ def criar_fonte(args: argparse.Namespace, captura: CapturaJSONL | None = None):
     )
 
 
-async def headless(fonte, limite: int | None = None, duracao: float | None = None) -> None:
+async def headless(
+    fonte, limite: int | None = None, duracao: float | None = None, gravador: GravadorAssincrono | None = None
+) -> None:
     quantidade = 0
     estado = EstadoPainel()
     try:
         async with asyncio.timeout(duracao), aclosing(fonte.eventos()) as eventos:
             async for evento in eventos:
                 if isinstance(evento, Frame):
+                    if gravador is not None:
+                        await gravador.gravar(evento)
                     if not estado.registrar(evento):
                         continue
                     print(evento.model_dump_json(), flush=True)
@@ -94,16 +101,21 @@ def main() -> None:
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
     captura = CapturaJSONL(args.captura, args.captura_max_bytes) if args.captura else None
     fonte = criar_fonte(args, captura)
+    gravador = GravadorAssincrono(Armazenamento(args.banco)) if args.banco else None
     if args.headless:
 
         async def executar() -> None:
             try:
                 if captura:
                     await captura.abrir()
-                await headless(fonte, args.limite, args.duracao)
+                if gravador:
+                    await gravador.iniciar()
+                await headless(fonte, args.limite, args.duracao, gravador)
             finally:
                 if captura:
                     await captura.fechar()
+                if gravador:
+                    await gravador.fechar()
                 if hasattr(fonte, "estatisticas"):
                     logging.getLogger(__name__).info("recepção: %s", fonte.estatisticas)
 
@@ -111,7 +123,7 @@ def main() -> None:
             asyncio.run(executar())
         except KeyboardInterrupt:
             pass
-        except (OSError, ValueError) as erro:
+        except (OSError, ValueError, sqlite3.Error) as erro:
             raise SystemExit(f"telemetria: {erro}") from erro
         return
 
@@ -126,7 +138,9 @@ def main() -> None:
         nonlocal tarefa
         if captura:
             await captura.abrir()
-        tarefa = background_tasks.create(coletar(fonte, estado), name="coleta")
+        if gravador:
+            await gravador.iniciar()
+        tarefa = background_tasks.create(coletar(fonte, estado, gravador), name="coleta")
 
     async def encerrar() -> None:
         if tarefa:
@@ -134,8 +148,14 @@ def main() -> None:
             await asyncio.gather(tarefa, return_exceptions=True)
         if captura:
             await captura.fechar()
+        if gravador:
+            await gravador.fechar()
 
-    criar_pagina(estado, fonte_simulada=fonte.simulada)
+    criar_pagina(estado, fonte_simulada=fonte.simulada, historico=bool(args.banco))
+    if args.banco:
+        from telemetria.pagina_historico import criar_pagina_historico
+
+        criar_pagina_historico(args.banco)
     app.on_startup(iniciar)
     app.on_shutdown(encerrar)
     ui.run(

@@ -1,6 +1,6 @@
 # Telemetria do Micromouse
 
-Painel local Python (TEL01 #17 e TEL02 #18) com receptor serial/TCP, simulador determinístico, captura e playback. O receptor é passivo: não transmite comandos nem inicia uma execução ao reconectar. Os dados do simulador levam origem `simulated`; medições reais dependem do produtor no robô.
+Painel local Python (TEL01 #17, TEL02 #18 e TEL03 #19) com receptor serial/TCP, simulador determinístico, captura e playback. O receptor é passivo: não transmite comandos nem inicia uma execução ao reconectar. Os dados do simulador levam origem `simulated`; medições reais dependem do produtor no robô.
 
 Para usar a **ESP32-S3-DevKitC-1 N8R2**, comece pelo [guia de conexão com a placa](../firmware/CONEXAO_ESP32_S3.md). Ele cobre firmware, USB, Wi-Fi e o primeiro teste sem sensores.
 
@@ -49,6 +49,7 @@ A porta serial deve estar livre: feche mpremote, REPL e monitores seriais antes 
 | `--fila-max` | 256 | Máximo de eventos pendentes no receptor |
 | `--captura PATH` | — | Arquivo novo de captura JSONL serial/TCP |
 | `--captura-max-bytes` | 10485760 | Limite de disco da captura |
+| `--banco PATH` | — | Salva as execuções em SQLite e habilita a página `/historico` |
 | `--headless` | — | Sem interface; Frames validados em stdout |
 | `--limite N` / `--duracao S` | — | Limita headless por Frames ou tempo |
 | `--rapido` | — | Playback sem espera, ainda cooperativo com o event loop |
@@ -121,6 +122,40 @@ Diagnósticos de conexão, limite e erros vão para stderr. Headless também mos
 
 A bateria mostra tensão; percentual depende de curva de descarga medida. A coleta atualiza o estado em tarefa independente e a interface renderiza 4 vezes por segundo.
 
+## Histórico de execuções (TEL03)
+
+Com `--banco`, todo frame válido recebido também é salvo em SQLite, em qualquer fonte (simulador, serial, TCP ou arquivo) e também no modo headless:
+
+```bash
+python -m telemetria --banco telemetria.db
+python -m telemetria --serial COM3 --banco telemetria.db
+python -m telemetria --arquivo captura.jsonl --headless --rapido --banco telemetria.db
+```
+
+A consulta abre o banco só para leitura e pode rodar com o painel aberto:
+
+```bash
+python -m telemetria.historico --banco telemetria.db
+python -m telemetria.historico --banco telemetria.db --labirinto 4x4 --estado concluida --origem measured
+python -m telemetria.historico --banco telemetria.db --limite 20 --pagina 2
+```
+
+No painel, o link **Histórico** abre `/historico`, com a mesma tabela e filtros por labirinto e estado. Cada linha mostra quando a execução chegou ao computador (UTC), `run_id`, labirinto, estado, duração pelo relógio do robô, origem dos dados (simulado, medido ou estimado), amostras, falhas e observações.
+
+Como os dados são guardados:
+
+- **Tabelas:** `execucao` (um resumo por corrida), `amostra` (eventos `sample`, com as velocidades em colunas e o frame completo em JSON) e `evento` (`start`, `map_update`, `fault` e `finish`).
+- **Chaves:** a execução é identificada por `robot_id` + `boot_id` + `run_id`, e cada mensagem por `robot_id` + `boot_id` + `seq`. Reenviar o mesmo frame, reconectar ou reproduzir a mesma captura não duplica nada.
+- **Ordem:** frames fora de ordem são aceitos; consultas ordenam por `seq`. Depois do `finish`, outro `finish` ou mensagens com `seq` maior daquela corrida são ignorados, porque o contrato define `finish` como terminal.
+- **Estados:** `em_andamento`, `concluida` (recebeu `finish`, com o `state` final do robô) e `incompleta`. Se o app fecha ou cai com uma corrida aberta, ela vira `incompleta` e recebe a marca "app interrompido: pode haver lacuna". Se o robô continuar enviando depois que o app voltar, ela volta para `em_andamento` e mantém a marca.
+- **Fora de corrida:** com `run_id` nulo, só falhas (`fault`) são guardadas; amostras do estado `pronto` não entram no histórico.
+- **Ausência não é zero:** leitura ausente ou inválida é salva como `NULL`.
+- **Retenção:** até 20.000 amostras por execução (cerca de 33 min a 10 Hz, o suficiente para o ensaio de 30 min). Acima disso, as amostras são contadas como descartadas, e eventos e resumo continuam sendo salvos. `Armazenamento.podar_amostras(manter_execucoes=N)` apaga as amostras das execuções mais antigas e mantém resumo e eventos.
+- **Desacoplamento:** a gravação usa uma fila limitada e uma thread própria do SQLite, em lotes de até 100 frames por transação. A tela não espera o disco. Se a fila enche, a coleta espera, para não perder `start`, `finish` ou `fault` em silêncio. Erro de disco é registrado em stderr e a recepção continua.
+- **Banco:** modo WAL; o esquema é versionado em `PRAGMA user_version` (v1), e um banco de versão desconhecida é recusado.
+
+Para a validação final com eventos reais (FW13), use o mesmo `--banco` na serial/TCP e confira o histórico com `python -m telemetria.historico`.
+
 ## Estrutura e testes
 
 | Arquivo | Responsabilidade |
@@ -130,6 +165,8 @@ A bateria mostra tensão; percentual depende de curva de descarga medida. A cole
 | `coleta.py` | Protocolo `Fonte`: `simulada`, `nome`, `eventos()` assíncrono |
 | `receptor.py` | Parser incremental, fila limitada, serial e servidor TCP |
 | `captura.py` | Captura JSONL limitada e fonte de playback |
+| `armazenamento.py` | SQLite: execuções, amostras, eventos e gravador assíncrono |
+| `historico.py` / `pagina_historico.py` | Consulta do histórico pelo terminal e pela página `/historico` |
 | `fonte_simulada.py` / `gerador.py` | Modelo determinístico e emissor JSONL headless |
 | `formatacao.py` / `painel.py` | Textos, interface NiceGUI e gráfico |
 | `__main__.py` | Seleção de fonte, CLI/UI e encerramento |
