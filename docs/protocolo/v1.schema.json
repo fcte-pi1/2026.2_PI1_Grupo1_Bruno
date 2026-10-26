@@ -1,0 +1,573 @@
+{
+  "$defs": {
+    "Ack": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ack",
+          "title": "Kind",
+          "type": "string"
+        },
+        "robot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        },
+        "command_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Command Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "enum": [
+                "wrong_target",
+                "expired",
+                "invalid_state",
+                "remote_start_disabled",
+                "id_conflict",
+                "busy"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error"
+        },
+        "state": {
+          "maxLength": 30,
+          "minLength": 1,
+          "title": "State",
+          "type": "string"
+        },
+        "t_ms": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "T Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "robot_id",
+        "boot_id",
+        "run_id",
+        "command_id",
+        "status",
+        "error",
+        "state",
+        "t_ms"
+      ],
+      "title": "Ack",
+      "type": "object"
+    },
+    "AtualizacaoMapa": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Height",
+          "type": "integer"
+        },
+        "source": {
+          "enum": [
+            "simulated",
+            "measured",
+            "estimated"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/Celula"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Cells",
+          "type": "array"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "source",
+        "cells"
+      ],
+      "title": "AtualizacaoMapa",
+      "type": "object"
+    },
+    "Celula": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "maximum": 31,
+          "minimum": 0,
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "maximum": 31,
+          "minimum": 0,
+          "title": "Y",
+          "type": "integer"
+        },
+        "walls": {
+          "maximum": 15,
+          "minimum": 0,
+          "title": "Walls",
+          "type": "integer"
+        },
+        "known": {
+          "maximum": 15,
+          "minimum": 0,
+          "title": "Known",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "walls",
+        "known"
+      ],
+      "title": "Celula",
+      "type": "object"
+    },
+    "Comando": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "command",
+          "title": "Kind",
+          "type": "string"
+        },
+        "robot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        },
+        "command_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Command Id",
+          "type": "string"
+        },
+        "command": {
+          "enum": [
+            "ping",
+            "stop",
+            "start"
+          ],
+          "title": "Command",
+          "type": "string"
+        },
+        "expires_at_ms": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Expires At Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "robot_id",
+        "boot_id",
+        "run_id",
+        "command_id",
+        "command",
+        "expires_at_ms"
+      ],
+      "title": "Comando",
+      "type": "object"
+    },
+    "EstatisticasTelemetria": {
+      "additionalProperties": false,
+      "properties": {
+        "control_cycles": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Control Cycles",
+          "type": "integer"
+        },
+        "control_late_cycles": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Control Late Cycles",
+          "type": "integer"
+        },
+        "samples_dropped": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Samples Dropped",
+          "type": "integer"
+        },
+        "events_dropped": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Events Dropped",
+          "type": "integer"
+        },
+        "queue_high_water": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Queue High Water",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "control_cycles",
+        "control_late_cycles",
+        "samples_dropped",
+        "events_dropped",
+        "queue_high_water"
+      ],
+      "title": "EstatisticasTelemetria",
+      "type": "object"
+    },
+    "Falha": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 200,
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Falha",
+      "type": "object"
+    },
+    "Frame": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "robot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        },
+        "maze_id": {
+          "anyOf": [
+            {
+              "maxLength": 20,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maze Id"
+        },
+        "seq": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        },
+        "t_ms": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "T Ms",
+          "type": "integer"
+        },
+        "event": {
+          "enum": [
+            "start",
+            "sample",
+            "map_update",
+            "fault",
+            "finish"
+          ],
+          "title": "Event",
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 30,
+          "minLength": 1,
+          "title": "State",
+          "type": "string"
+        },
+        "wheel_left": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Roda"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "wheel_right": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Roda"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "control_error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Leitura"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sensors": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Leitura"
+          },
+          "maxProperties": 8,
+          "title": "Sensors",
+          "type": "object"
+        },
+        "battery_voltage": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Leitura"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Falha"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "map": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AtualizacaoMapa"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "telemetry_stats": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EstatisticasTelemetria"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "schema_version",
+        "robot_id",
+        "boot_id",
+        "seq",
+        "t_ms",
+        "event",
+        "state"
+      ],
+      "title": "Frame",
+      "type": "object"
+    },
+    "Leitura": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "unit": {
+          "enum": [
+            "mm/s",
+            "cm",
+            "V"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "simulated",
+            "measured",
+            "estimated"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "valid": {
+          "default": true,
+          "title": "Valid",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "unit",
+        "source"
+      ],
+      "title": "Leitura",
+      "type": "object"
+    },
+    "Roda": {
+      "additionalProperties": false,
+      "properties": {
+        "speed": {
+          "$ref": "#/$defs/Leitura"
+        },
+        "target": {
+          "$ref": "#/$defs/Leitura"
+        }
+      },
+      "required": [
+        "speed",
+        "target"
+      ],
+      "title": "Roda",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/Frame"
+    },
+    {
+      "$ref": "#/$defs/Comando"
+    },
+    {
+      "$ref": "#/$defs/Ack"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Micromouse — contrato v1"
+}

@@ -5,6 +5,14 @@
 # Adicione outros arquivos a serem ignorados aqui
 # ...
 
+# Python e configuração local da ESP32
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+src/firmware/wifi_config.py
+
 # LaTeX
 
 relatorio.pdf
