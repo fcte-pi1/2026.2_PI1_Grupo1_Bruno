@@ -1,4 +1,4 @@
-"""Captura de frames JSONL e reprodução pelo mesmo parser do receptor."""
+"""captura e reprodução de telemetria jsonl."""
 
 import asyncio
 import logging
@@ -25,8 +25,6 @@ async def _abrir_arquivo(caminho: Path, modo: str) -> BinaryIO:
 
 
 class CapturaJSONL:
-    """Salva somente frames validados; erro/limite de disco suspende a captura."""
-
     def __init__(self, caminho: str | Path, max_bytes: int = 10 * 1024 * 1024) -> None:
         if max_bytes < 1:
             raise ValueError("max_bytes deve ser positivo")
@@ -74,8 +72,6 @@ class CapturaJSONL:
 
 
 class FonteArquivo:
-    """Lê JSONL em blocos limitados; não guarda o arquivo todo em memória."""
-
     simulada = False
 
     def __init__(self, caminho: str | Path, taxa_hz: float = 10.0, rapido: bool = False) -> None:

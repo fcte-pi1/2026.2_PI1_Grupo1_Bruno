@@ -1,5 +1,3 @@
-"""Host-side fake-stream tests; no board, UART or network is required."""
-
 import json
 import unittest
 
@@ -186,7 +184,7 @@ class TelemetryTests(unittest.TestCase):
         publisher.emit("start", "running")
         self.now = 20
         publisher.emit("finish", "stopped")
-        publisher.run_id = "run-2"  # Application alone starts another run.
+        publisher.run_id = "run-2"  # application alone starts another run.
         self.now = 100
         publisher.emit("start", "running")
         stream = FakeStream()
@@ -219,8 +217,7 @@ class TelemetryTests(unittest.TestCase):
         publisher = self.publisher(include_stats=False)
         stream = FakeStream()
         writer = BoundedWriter(stream.write)
-        # Large but finite numeric readings allow hitting the precise byte limit
-        # while retaining valid sensor names, counts and units.
+        # números grandes permitem atingir exatamente o limite do frame
         sensors = {"sensor" + str(i): reading(1, "cm") for i in range(8)}
         left = {"speed": reading(1, "mm/s"), "target": reading(1, "mm/s")}
         right = {"speed": reading(1, "mm/s"), "target": reading(1, "mm/s")}
