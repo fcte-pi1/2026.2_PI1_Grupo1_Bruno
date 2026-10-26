@@ -60,7 +60,9 @@ class CampoLeitura:
         self._origem.set_visibility(leitura is not None)
 
 
-def criar_pagina(estado: EstadoPainel, fonte_simulada: bool, intervalo_s: float = 0.25) -> None:
+def criar_pagina(
+    estado: EstadoPainel, fonte_simulada: bool, intervalo_s: float = 0.25, historico: bool = False
+) -> None:
     @ui.page("/")
     def pagina() -> None:
         ui.page_title("Telemetria Micromouse")
@@ -68,6 +70,8 @@ def criar_pagina(estado: EstadoPainel, fonte_simulada: bool, intervalo_s: float 
         with ui.header().classes("items-center justify-between bg-slate-800"):
             ui.label("Telemetria Micromouse").classes("text-xl font-bold")
             with ui.row().classes("items-center gap-3"):
+                if historico:
+                    ui.link("Histórico", "/historico").classes("text-white")
                 if fonte_simulada:
                     ui.badge("FONTE SIMULADA", color="orange").classes("text-sm")
                 selo = ui.badge("aguardando", color="grey").classes("text-sm")
