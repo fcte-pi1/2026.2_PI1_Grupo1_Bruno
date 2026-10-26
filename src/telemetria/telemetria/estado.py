@@ -42,7 +42,10 @@ class EstadoPainel:
         max_amostras: int = 2000,
         max_log: int = 200,
         relogio: Callable[[], float] = time.monotonic,
+        max_epocas: int = 256,
     ) -> None:
+        if max_epocas < 1:
+            raise ValueError("max_epocas deve ser positivo")
         self.limite_desatualizado_s = limite_desatualizado_s
         self.limite_desconectado_s = limite_desconectado_s
         self.janela_s = janela_s
@@ -54,8 +57,10 @@ class EstadoPainel:
         self.versao = 0
         self._ultimo_rx: float | None = None
         self._link_ativo = False
-        self._ultimo_seq: int | None = None
         self._contador_log = 0
+        self._max_epocas = max_epocas
+        self._boots_encerrados: set[str] = set()
+        self._runs_encerrados: set[str] = set()
 
     def conexao(self) -> Conexao:
         if not self._link_ativo:
@@ -84,19 +89,35 @@ class EstadoPainel:
 
     def registrar(self, frame: Frame) -> bool:
         anterior = self.ultimo_frame
-        if anterior is not None and frame.boot_id != anterior.boot_id:
-            self._registrar_log("aviso", f"Novo boot do robô detectado ({frame.boot_id})")
-            self._ultimo_seq = None
-            self.amostras.clear()
-        elif self._ultimo_seq is not None and frame.seq <= self._ultimo_seq:
-            self.descartados += 1
-            return False
+        novo_boot = anterior is not None and frame.boot_id != anterior.boot_id
+        novo_run = anterior is not None and frame.run_id != anterior.run_id
+        if anterior is not None:
+            invalido = frame.robot_id != anterior.robot_id
+            if novo_boot:
+                invalido |= frame.boot_id in self._boots_encerrados
+                invalido |= len(self._boots_encerrados) >= self._max_epocas
+            else:
+                invalido |= frame.seq <= anterior.seq or frame.t_ms < anterior.t_ms
+                invalido |= anterior.event == "finish" and frame.run_id == anterior.run_id
+                if novo_run:
+                    invalido |= frame.run_id is not None and frame.run_id in self._runs_encerrados
+                    invalido |= anterior.run_id is not None and len(self._runs_encerrados) >= self._max_epocas
+            if invalido:
+                self.descartados += 1
+                self.versao += 1
+                return False
 
-        if anterior is not None and frame.run_id != anterior.run_id:
+        if novo_boot:
+            self._boots_encerrados.add(anterior.boot_id)
+            self._runs_encerrados.clear()
+            self._registrar_log("aviso", f"Novo boot do robô detectado ({frame.boot_id})")
+        elif novo_run and anterior.run_id is not None:
+            self._runs_encerrados.add(anterior.run_id)
+
+        if novo_boot or novo_run:
             self.amostras.clear()
 
         self._link_ativo = True
-        self._ultimo_seq = frame.seq
         self._ultimo_rx = self._relogio()
         self.ultimo_frame = frame
         self._guardar_amostra(frame)
