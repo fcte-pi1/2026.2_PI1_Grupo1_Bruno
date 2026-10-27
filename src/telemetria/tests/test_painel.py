@@ -74,3 +74,18 @@ async def test_link_do_historico_so_aparece_com_banco(user: User):
     criar_pagina(EstadoPainel(), fonte_simulada=False, intervalo_s=0.1, historico=True)
     await user.open("/")
     await user.should_see("Histórico")
+
+
+async def test_mapa_ao_vivo_mostra_o_que_chega(user: User):
+    from telemetria.gerador import gerar_frames
+
+    estado = EstadoPainel()
+    criar_pagina(estado, fonte_simulada=True, intervalo_s=0.1)
+    await user.open("/")
+    await user.should_see("Mapa descoberto")
+    for frame in list(gerar_frames(5, 10, 300, navegacao=True))[:30]:
+        estado.registrar(frame)
+    await esperar_renderizacao()
+    graficos = [g for g in user.find(ui.plotly).elements if "uirevision" in g.figure["layout"]]
+    mapa = next(g for g in graficos if g.figure["layout"]["uirevision"] == "mapa")
+    assert any(traco["name"].startswith("Robô") for traco in mapa.figure["data"])
