@@ -79,3 +79,50 @@ async def test_pagina_historico_sem_banco(user: User, tmp_path):
     criar_pagina_historico(tmp_path / "ainda-nao-existe.db")
     await user.open("/historico")
     await user.should_see("Nenhuma execução encontrada.")
+
+
+def popular_com_mapa(caminho):
+    with Armazenamento(caminho) as banco:
+        banco.registrar_lote(list(gerar_frames(5, 10, 300, navegacao=True, maze_id="4x4")))
+        return banco.execucoes()[0].id
+
+
+async def test_replay_toca_e_pausa(user: User, tmp_path):
+    caminho = tmp_path / "telemetria.db"
+    execucao_id = popular_com_mapa(caminho)
+    criar_pagina_historico(caminho)
+    await user.open(f"/replay/{execucao_id}")
+    await user.should_see("Replay da execução")
+    tempo = next(r for r in user.find(ui.label).elements if r.text.startswith("00:00.0 /"))
+    assert "mensagem 2 de" in tempo.text  # start e primeiro map_update chegam em t=0
+
+    linha_tempo = user.find(ui.slider).elements.pop()
+    inicio = linha_tempo.value
+    user.find(marker=None, kind=ui.button).click()
+    await asyncio.sleep(0.5)
+    assert linha_tempo.value > inicio
+
+    linha_tempo.set_value(linha_tempo.props["max"])
+    await asyncio.sleep(0.3)
+    grafico = user.find(ui.plotly).elements.pop()
+    nomes = {traco["name"] for traco in grafico.figure["data"]}
+    assert {"Parede", "Trajeto executado", "Parede desconhecida"} <= nomes
+
+
+async def test_replay_de_execucao_inexistente(user: User, tmp_path):
+    caminho = tmp_path / "telemetria.db"
+    popular(caminho)
+    criar_pagina_historico(caminho)
+    await user.open("/replay/999")
+    await user.should_see("Execução não encontrada.")
+
+
+async def test_clicar_na_execucao_abre_o_replay(user: User, tmp_path):
+    caminho = tmp_path / "telemetria.db"
+    execucao_id = popular_com_mapa(caminho)
+    criar_pagina_historico(caminho)
+    await user.open("/historico")
+    tabela = user.find(ui.table).elements.pop()
+    user.find(ui.table).trigger("rowClick", [{}, tabela.rows[0], 0])
+    await user.should_see("Replay da execução")
+    assert tabela.rows[0]["id"] == execucao_id

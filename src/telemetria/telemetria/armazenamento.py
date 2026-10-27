@@ -16,7 +16,7 @@ from enum import StrEnum
 from pathlib import Path
 
 from telemetria.formatacao import valor_numerico
-from telemetria.modelos import Frame, Leitura
+from telemetria.modelos import FRAMES_TELEMETRIA, Frame, Leitura
 
 logger = logging.getLogger(__name__)
 
@@ -136,6 +136,11 @@ def origens(frame: Frame) -> set[str]:
     encontradas = {leitura.source for leitura in leituras if leitura is not None}
     if frame.map is not None:
         encontradas.add(frame.map.source)
+    navegacao = getattr(frame, "navigation", None)
+    if navegacao is not None:
+        for parte in (navegacao.pose, navegacao.route):
+            if parte is not None:
+                encontradas.add(parte.source)
     return encontradas
 
 
@@ -434,7 +439,24 @@ class Armazenamento:
             f"SELECT payload FROM evento WHERE {condicao} ORDER BY boot_id, seq",
             () if execucao_id is None else (execucao_id,),
         ).fetchall()
-        return [Frame.model_validate_json(linha[0]) for linha in linhas]
+        return [FRAMES_TELEMETRIA.validate_json(linha[0]) for linha in linhas]
+
+    def frames(self, execucao_id: int) -> list[Frame]:
+        """Amostras e eventos da execução, na ordem de seq, para o replay."""
+        linhas = self.conexao.execute(
+            "SELECT seq, payload FROM amostra WHERE execucao_id = ? "
+            "UNION ALL SELECT seq, payload FROM evento WHERE execucao_id = ? ORDER BY seq",
+            (execucao_id, execucao_id),
+        ).fetchall()
+        return [FRAMES_TELEMETRIA.validate_json(linha[1]) for linha in linhas]
+
+    def execucao(self, execucao_id: int) -> ResumoExecucao | None:
+        linha = self.conexao.execute(
+            "SELECT e.*, (SELECT COUNT(*) FROM amostra a WHERE a.execucao_id = e.id) AS total_amostras "
+            "FROM execucao e WHERE e.id = ?",
+            (execucao_id,),
+        ).fetchone()
+        return None if linha is None else self._resumo(linha)
 
     def podar_amostras(self, manter_execucoes: int) -> int:
         """Retenção: apaga amostras de execuções antigas; resumo e eventos permanecem."""

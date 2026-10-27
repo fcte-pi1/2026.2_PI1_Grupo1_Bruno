@@ -2,6 +2,7 @@ from nicegui import ui
 
 from telemetria.estado import Amostra, Conexao, EstadoPainel
 from telemetria.formatacao import cor_origem, texto_leitura, texto_origem, texto_tempo
+from telemetria.mapa import figura_mapa
 from telemetria.modelos import Leitura
 
 COR_CONEXAO = {
@@ -119,10 +120,17 @@ def criar_pagina(
             grafico = ui.plotly(figura([])).classes("w-full h-80")
 
         with ui.card().classes("w-full"):
+            ui.label("Mapa descoberto").classes("text-lg font-bold")
+            ui.label("Só aparece o que o robô enviou: parede pontilhada ainda não foi observada.").classes(
+                "text-xs text-gray-500"
+            )
+            grafico_mapa = ui.plotly(figura_mapa(estado.mapa)).classes("w-full h-96")
+
+        with ui.card().classes("w-full"):
             ui.label("Eventos e falhas").classes("text-lg font-bold")
             log = ui.log(max_lines=200).classes("w-full h-48")
 
-        visto = {"versao": -1, "log": 0}
+        visto = {"versao": -1, "log": 0, "mapa": -1}
 
         def atualizar() -> None:
             conexao = estado.conexao()
@@ -173,5 +181,8 @@ def criar_pagina(
                 campos_sensores[nome].mostrar(frame.sensors.get(nome))
 
             grafico.update_figure(figura(estado.amostras_na_janela()))
+            if estado.mapa.versao != visto["mapa"]:
+                visto["mapa"] = estado.mapa.versao
+                grafico_mapa.update_figure(figura_mapa(estado.mapa))
 
         ui.timer(intervalo_s, atualizar)

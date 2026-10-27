@@ -7,7 +7,7 @@ import sys
 from collections.abc import Iterator
 from contextlib import nullcontext
 
-from telemetria.fonte_simulada import SimuladorRobo
+from telemetria.fonte_simulada import SimuladorRobo, dimensoes_labirinto
 from telemetria.modelos import Frame
 
 
@@ -29,14 +29,26 @@ def endereco_tcp(valor: str) -> tuple[str, int]:
     return host.removeprefix("[").removesuffix("]"), numero
 
 
-def gerar_frames(seed: int = 7, taxa_hz: float = 10.0, duracao_s: float = 10.0) -> Iterator[Frame]:
+def gerar_frames(
+    seed: int = 7,
+    taxa_hz: float = 10.0,
+    duracao_s: float = 10.0,
+    navegacao: bool = False,
+    maze_id: str = "4x4",
+) -> Iterator[Frame]:
     if not math.isfinite(taxa_hz) or not math.isfinite(duracao_s) or taxa_hz <= 0 or duracao_s <= 0:
         raise ValueError("taxa e duração devem ser positivas e finitas")
-    robo = SimuladorRobo(seed)
+    robo = SimuladorRobo(seed, maze_id=maze_id, navegacao=navegacao)
     yield robo.iniciar(0.0)
+    yield from robo.pendentes(0.0)
+    t_s = duracao_s
     for passo in range(1, math.floor(duracao_s * taxa_hz) + 1):
         yield robo.amostra(passo / taxa_hz, 1 / taxa_hz)
-    yield robo.finalizar(duracao_s)
+        yield from robo.pendentes(passo / taxa_hz)
+        if robo.chegou:
+            t_s = passo / taxa_hz
+            break
+    yield robo.finalizar(t_s)
 
 
 async def executar(args: argparse.Namespace) -> None:
@@ -45,7 +57,7 @@ async def executar(args: argparse.Namespace) -> None:
         if args.tcp:
             _, escritor = await asyncio.wait_for(asyncio.open_connection(*args.tcp), timeout=5.0)
         with open(args.output, "xb") if args.output else nullcontext(sys.stdout.buffer) as arquivo:
-            for frame in gerar_frames(args.seed, args.taxa, args.duracao):
+            for frame in gerar_frames(args.seed, args.taxa, args.duracao, args.mapa, args.labirinto):
                 linha = (frame.model_dump_json() + "\n").encode()
                 if escritor:
                     escritor.write(linha)
@@ -66,10 +78,16 @@ def main() -> None:
     parser.add_argument("--taxa", type=positivo, default=10.0)
     parser.add_argument("--duracao", type=positivo, default=10.0)
     parser.add_argument("--rapido", action="store_true", help="gera sem espera; testa sobrecarga")
+    parser.add_argument("--mapa", action="store_true", help="contrato v2 com mapa, pose e rota simulados")
+    parser.add_argument("--labirinto", default="4x4", help="dimensões do labirinto simulado (ex.: 8x4)")
     destino = parser.add_mutually_exclusive_group()
     destino.add_argument("--output", help="arquivo JSONL novo (não sobrescreve)")
     destino.add_argument("--tcp", type=endereco_tcp, help="conecta ao receptor HOST:PORT")
     args = parser.parse_args()
+    try:
+        dimensoes_labirinto(args.labirinto)
+    except ValueError as erro:
+        parser.error(str(erro))
     try:
         asyncio.run(executar(args))
     except (OSError, TimeoutError) as erro:

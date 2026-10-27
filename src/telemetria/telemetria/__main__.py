@@ -8,7 +8,7 @@ from telemetria.armazenamento import Armazenamento, GravadorAssincrono
 from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.coleta import aplicar, coletar
 from telemetria.estado import EstadoPainel
-from telemetria.fonte_simulada import FonteSimulada
+from telemetria.fonte_simulada import FonteSimulada, dimensoes_labirinto
 from telemetria.gerador import endereco_tcp, positivo
 from telemetria.modelos import Frame
 from telemetria.receptor import FonteSerial, FonteTCPListen
@@ -40,6 +40,8 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--captura", help="arquivo novo para salvar frames validados em JSONL")
     parser.add_argument("--captura-max-bytes", type=inteiro_positivo, default=10 * 1024 * 1024)
     parser.add_argument("--banco", help="arquivo SQLite onde as execuções são salvas (TEL03)")
+    parser.add_argument("--mapa", action="store_true", help="simulador com mapa, pose e rota (contrato v2)")
+    parser.add_argument("--labirinto", default="4x4", help="dimensões do labirinto simulado (ex.: 8x4)")
     parser.add_argument(
         "--headless", action="store_true", help="sem UI; Frames válidos em stdout, diagnóstico em stderr"
     )
@@ -54,6 +56,12 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--limite e --duracao requerem --headless")
     if args.rapido and not args.arquivo:
         parser.error("--rapido requer --arquivo")
+    if args.mapa and (args.serial or args.tcp_listen or args.arquivo):
+        parser.error("--mapa vale só para o simulador")
+    try:
+        dimensoes_labirinto(args.labirinto)
+    except ValueError as erro:
+        parser.error(str(erro))
     return args
 
 
@@ -69,6 +77,8 @@ def criar_fonte(args: argparse.Namespace, captura: CapturaJSONL | None = None):
         taxa_hz=args.taxa,
         intervalo_queda_s=args.intervalo_queda,
         duracao_queda_s=args.duracao_queda,
+        navegacao=args.mapa,
+        maze_id=args.labirinto,
     )
 
 

@@ -6,6 +6,7 @@ from datetime import datetime
 from enum import StrEnum
 
 from telemetria.formatacao import valor_numerico
+from telemetria.mapa import EstadoMapa
 from telemetria.modelos import Frame
 
 
@@ -51,6 +52,7 @@ class EstadoPainel:
         self.janela_s = janela_s
         self._relogio = relogio
         self.ultimo_frame: Frame | None = None
+        self.mapa = EstadoMapa()
         self.amostras: deque[Amostra] = deque(maxlen=max_amostras)
         self.log: deque[RegistroLog] = deque(maxlen=max_log)
         self.descartados = 0
@@ -122,6 +124,7 @@ class EstadoPainel:
         self.ultimo_frame = frame
         self._guardar_amostra(frame)
         self._registrar_evento(frame)
+        self.mapa.aplicar(frame)
         self.versao += 1
         return True
 

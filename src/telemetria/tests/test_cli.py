@@ -97,3 +97,13 @@ async def test_headless_filtra_duplicados_ordem_boots_e_execucoes(capsys):
     assert [json.loads(linha) for linha in capsys.readouterr().out.splitlines()] == [
         f.model_dump() for f in [a1, a2, a3, b1, b2]
     ]
+
+
+def test_mapa_so_com_simulador():
+    args = argumentos(["--mapa", "--labirinto", "12x4"])
+    fonte = criar_fonte(args)
+    assert fonte.navegacao and fonte.maze_id == "12x4"
+    with pytest.raises(SystemExit):
+        argumentos(["--mapa", "--serial", "COM3"])
+    with pytest.raises(SystemExit):
+        argumentos(["--labirinto", "doze"])
