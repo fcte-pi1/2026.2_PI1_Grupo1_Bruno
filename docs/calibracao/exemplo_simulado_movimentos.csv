@@ -1,0 +1,9 @@
+origem,tipo,controle,alvo,medido,desvio_mm,colisoes,resultado
+simulated,reta,sem_correcao,1000,960,30,0,concluido
+simulated,reta,sem_correcao,1000,980,25,0,concluido
+simulated,reta,com_correcao,1000,995,4,0,concluido
+simulated,reta,com_correcao,1000,1005,6,0,concluido
+simulated,giro,sem_correcao,90,98,0,0,concluido
+simulated,giro,sem_correcao,90,96,0,0,concluido
+simulated,giro,com_correcao,90,91,0,0,concluido
+simulated,giro,com_correcao,90,89,0,0,concluido

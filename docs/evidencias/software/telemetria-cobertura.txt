@@ -1,0 +1,18 @@
+Name                             Stmts   Miss Branch BrPart   Cover   Missing
+-----------------------------------------------------------------------------
+telemetria/__init__.py               0      0      0      0 100.00%
+telemetria/__main__.py             129     56     50      4  53.07%   56, 82->exit, 85, 95-96, 100-161, 172
+telemetria/armazenamento.py        243      6     66      8  95.47%   138, 153, 162, 205, 442, 486, 498->exit, 518->524
+telemetria/captura.py               84      2     20      4  94.23%   22->24, 30, 69->exit, 79
+telemetria/coleta.py                20      1     10      2  90.00%   24->exit, 32
+telemetria/estado.py               122      2     36      2  97.47%   48, 156
+telemetria/fonte_simulada.py       108      0     28      0 100.00%
+telemetria/formatacao.py            29      1     12      1  95.12%   44
+telemetria/gerador.py               65     34     18      3  45.78%   18, 28, 43-60, 64-78, 82
+telemetria/historico.py             52      6     18      5  84.29%   19->21, 31, 33, 35, 94-95, 109
+telemetria/modelos.py              173      4     44      4  96.31%   33, 118, 120, 124
+telemetria/pagina_historico.py      37      0      2      0 100.00%
+telemetria/painel.py               109      0     20      0 100.00%
+telemetria/receptor.py             226    120     54      4  44.29%   34, 40, 94, 101-120, 123-127, 136-137, 150-153, 156, 159-179, 194, 200-238, 249, 257-290, 293-304
+-----------------------------------------------------------------------------
+TOTAL                             1397    232    378     37  81.24%

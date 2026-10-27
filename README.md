@@ -24,7 +24,7 @@ O Micromouse será desenvolvido de forma modular, permitindo que os subgrupos tr
 | João Paulo Oliveira César | 242004760 | Engenharia de Software | Software |
 | João Paulo Pires Silva | 251010909 | Engenharia de Software | Software |
 | Kaio Amory | 241012276 | Engenharia de Software | Hardware |
-| Otávio | 242004911 | Engenharia de Software | Software |
+| Otávio de Paiva Menezes Teixeira | 242004911 | Engenharia de Software | Software |
 | Paulo Renato Medrado Roque | 221035068 | Engenharia Automotiva | Estrutura |
 | Pietro Calegari Visentin | 232014754 | Engenharia de Software | Software |
 | Tamires Lima Araújo | 241037551 | Engenharia Aeroespacial | Sub-líder de Estrutura |
@@ -53,6 +53,14 @@ Os padrões de colaboração do projeto estão descritos nos arquivos abaixo:
 - Separar alterações por contexto para facilitar revisão e histórico.
 - Atualizar a documentação sempre que houver mudança relevante no projeto.
 
+## Conectar a placa
+
+Para a **ESP32-S3-DevKitC-1 N8R2**, siga o [passo a passo de bancada](src/firmware/CONEXAO_ESP32_S3.md). O primeiro teste usa USB para carregar o código e Wi-Fi para chegar ao painel, sem sensores nem motores.
+
 ## Status
 
-Projeto em fase inicial de estruturação. A telemetria já começou a ser montada em outro repositório e poderá ser integrada ou referenciada futuramente conforme a arquitetura do sistema evoluir.
+O [contrato v1 de telemetria e comandos](docs/protocolo/README.md) integra o
+[painel e receptor Python](src/telemetria/README.md) ao emissor
+[serial](src/firmware/TELEMETRY.md) ou [Wi-Fi/TCP](src/firmware/WIFI.md).
+Há fontes simuladas, captura/reprodução e testes sem hardware. A validação
+na ESP32 e no robô permanece pendente; veja as [evidências](docs/protocolo/VALIDACAO.md).
