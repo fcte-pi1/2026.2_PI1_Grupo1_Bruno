@@ -247,3 +247,15 @@ async def test_erro_de_gravacao_nao_derruba_coleta(tmp_path):
     await gravador.gravar(frame(1, "start"))
     await gravador.fechar()
     assert gravador.falhas_gravacao == 1
+
+
+def test_frames_v2_sao_relidos_com_navegacao(banco):
+    frames = list(gerar_frames(5, 10, 300, navegacao=True))
+    banco.registrar_lote(frames)
+    [resumo] = banco.execucoes()
+    assert resumo.origens == ("simulated",)
+    eventos = banco.eventos(resumo.id)
+    assert any(e.event == "map_update" and e.navigation.route is not None for e in eventos)
+    assert [f.seq for f in banco.frames(resumo.id)] == [f.seq for f in frames]
+    assert banco.execucao(resumo.id) == resumo
+    assert banco.execucao(999) is None
