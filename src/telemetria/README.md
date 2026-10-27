@@ -1,6 +1,6 @@
 # Telemetria do Micromouse
 
-Painel local Python (TEL01 #17, TEL02 #18 e TEL03 #19) com receptor serial/TCP, simulador determinístico, captura e playback. O receptor é passivo: não transmite comandos nem inicia uma execução ao reconectar. Os dados do simulador levam origem `simulated`; medições reais dependem do produtor no robô.
+Painel local Python (TEL01 #17, TEL02 #18, TEL03 #19 e TEL04 #20) com receptor serial/TCP, simulador determinístico, captura e playback. O receptor é passivo: não transmite comandos nem inicia uma execução ao reconectar. Os dados do simulador levam origem `simulated`; medições reais dependem do produtor no robô.
 
 Para usar a **ESP32-S3-DevKitC-1 N8R2**, comece pelo [guia de conexão com a placa](../firmware/CONEXAO_ESP32_S3.md). Ele cobre firmware, USB, Wi-Fi e o primeiro teste sem sensores.
 
@@ -50,6 +50,8 @@ A porta serial deve estar livre: feche mpremote, REPL e monitores seriais antes 
 | `--captura PATH` | — | Arquivo novo de captura JSONL serial/TCP |
 | `--captura-max-bytes` | 10485760 | Limite de disco da captura |
 | `--banco PATH` | — | Salva as execuções em SQLite e habilita a página `/historico` |
+| `--mapa` | — | Simulador com mapa, pose e rota (contrato v2) |
+| `--labirinto` | 4x4 | Dimensões do labirinto simulado: 4x4, 8x4, 12x4... |
 | `--headless` | — | Sem interface; Frames validados em stdout |
 | `--limite N` / `--duracao S` | — | Limita headless por Frames ou tempo |
 | `--rapido` | — | Playback sem espera, ainda cooperativo com o event loop |
@@ -162,6 +164,27 @@ Como os dados são guardados:
 
 Para a validação final com eventos reais (FW13), use o mesmo `--banco` na serial/TCP e confira o histórico com `python -m telemetria.historico`.
 
+## Mapa, trajeto e replay (TEL04)
+
+O painel tem o cartão **Mapa descoberto**, montado só com o que chega pelo contrato v2: `map_update` (bits `walls` e `known`) e `navigation` (`pose` e `route`). Frames v1 continuam funcionando, só sem mapa.
+
+- Parede observada: linha preta. Passagem observada: sem linha. Lado ainda não observado: pontilhado cinza. Se duas leituras da mesma face discordam, a linha fica vermelha.
+- Células com alguma informação ficam levemente sombreadas; o resto do labirinto aparece vazio, sem completar paredes que o robô não viu.
+- **Trajeto executado** (azul, linha cheia) é a sequência de poses recebidas. **Rota planejada** (laranja, tracejada) é a última `route` enviada; `route.cells=[]` apaga a rota.
+- O robô aparece como uma seta na direção do `heading`; falhas são marcadas com um X na célula onde o robô estava.
+- Um `start` novo, ou um mapa de outro boot, execução ou labirinto, limpa o desenho.
+
+Para testar sem o robô, o simulador explora um labirinto gerado a partir da semente por flood fill. O labirinto completo nunca é enviado: cada `map_update` traz só a célula em que o robô acabou de entrar.
+
+```bash
+python -m telemetria --mapa --labirinto 8x4 --banco telemetria.db
+python -m telemetria.gerador --mapa --labirinto 12x4 --rapido --duracao 300 --output mapa.jsonl
+```
+
+Com `--banco`, clique numa linha da página `/historico` para abrir `/replay/<id>`. O replay reconstrói o mapa a partir dos frames salvos, na ordem de `seq`, com linha do tempo, play/pausa e velocidade de 0,5x a 4x. Para pular rápido na linha do tempo, ele guarda uma cópia do estado a cada 50 mensagens. A lista de falhas mostra quando e onde cada uma aconteceu.
+
+A tela ao vivo e o replay usam a mesma classe (`EstadoMapa`), e os testes conferem que o estado final de uma captura é igual nos dois. Se a coleta perdeu mensagens, o replay mostra a mesma lacuna; se a retenção apagou amostras antigas, as poses delas somem do trajeto, mas os `map_update` continuam.
+
 ## Estrutura e testes
 
 | Arquivo | Responsabilidade |
@@ -172,7 +195,8 @@ Para a validação final com eventos reais (FW13), use o mesmo `--banco` na seri
 | `receptor.py` | Parser incremental, fila limitada, serial e servidor TCP |
 | `captura.py` | Captura JSONL limitada e fonte de playback |
 | `armazenamento.py` | SQLite: execuções, amostras, eventos e gravador assíncrono |
-| `historico.py` / `pagina_historico.py` | Consulta do histórico pelo terminal e pela página `/historico` |
+| `historico.py` / `pagina_historico.py` | Histórico pelo terminal e pelas páginas `/historico` e `/replay/<id>` |
+| `mapa.py` / `replay.py` | Estado e desenho do mapa; reconstrução da execução para o replay |
 | `fonte_simulada.py` / `gerador.py` | Modelo determinístico e emissor JSONL headless |
 | `formatacao.py` / `painel.py` | Textos, interface NiceGUI e gráfico |
 | `__main__.py` | Seleção de fonte, CLI/UI e encerramento |
