@@ -1,0 +1,70 @@
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py -m pytest tests/test_armazenamento.py -q -ra
+
+......................                                                   [100%]
+22 passed in 1.86s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_captura.py -q -ra
+
+........                                                                 [100%]
+8 passed in 0.32s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_cli.py -q -ra
+
+..............                                                           [100%]
+14 passed in 0.61s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_contrato.py -q -ra
+
+...................                                                      [100%]
+19 passed in 0.17s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_contrato_v2.py -q -ra
+
+.......................................                                  [100%]
+39 passed in 0.46s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_estado.py -q -ra
+
+.................                                                        [100%]
+17 passed in 0.22s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_fonte_simulada.py -q -ra
+
+........                                                                 [100%]
+8 passed in 1.17s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_formatacao.py -q -ra
+
+.......                                                                  [100%]
+7 passed in 0.13s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_gerador.py -q -ra
+
+......                                                                   [100%]
+6 passed in 0.77s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_historico.py -q -ra
+
+.....                                                                    [100%]
+5 passed in 1.72s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_integracao_firmware.py -q -ra
+
+
+INTERROMPIDO: excedeu 30 s; grupo nao aprovado.
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_modelos.py -q -ra
+
+......                                                                   [100%]
+6 passed in 0.11s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_painel.py -q -ra
+
+......                                                                   [100%]
+6 passed in 2.61s
+
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/telemetria.coverage --source telemetria --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py --append -m pytest tests/test_receptor.py -q -ra
+
+................
+INTERROMPIDO: excedeu 30 s; grupo nao aprovado.
+

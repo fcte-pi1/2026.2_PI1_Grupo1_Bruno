@@ -1,0 +1,65 @@
+{
+  "firmware": {
+    "exit_code_testes": 0,
+    "grupos_em_processos_separados": 1,
+    "exit_code_cobertura": 0,
+    "totais": {
+      "covered_lines": 749,
+      "num_statements": 915,
+      "percent_covered": 79.28949357520786,
+      "percent_covered_display": "79",
+      "missing_lines": 166,
+      "excluded_lines": 0,
+      "percent_statements_covered": 81.85792349726776,
+      "percent_statements_covered_display": "82",
+      "num_branches": 408,
+      "num_partial_branches": 40,
+      "covered_branches": 300,
+      "missing_branches": 108,
+      "percent_branches_covered": 73.52941176470588,
+      "percent_branches_covered_display": "74"
+    }
+  },
+  "telemetria": {
+    "exit_code_testes": 124,
+    "grupos_em_processos_separados": 14,
+    "exit_code_cobertura": 0,
+    "totais": {
+      "covered_lines": 1165,
+      "num_statements": 1397,
+      "percent_covered": 81.2394366197183,
+      "percent_covered_display": "81",
+      "missing_lines": 232,
+      "excluded_lines": 7,
+      "percent_statements_covered": 83.39298496778812,
+      "percent_statements_covered_display": "83",
+      "num_branches": 378,
+      "num_partial_branches": 37,
+      "covered_branches": 277,
+      "missing_branches": 101,
+      "percent_branches_covered": 73.28042328042328,
+      "percent_branches_covered_display": "73"
+    }
+  },
+  "calibracao": {
+    "exit_code_testes": 0,
+    "grupos_em_processos_separados": 1,
+    "exit_code_cobertura": 0,
+    "totais": {
+      "covered_lines": 143,
+      "num_statements": 152,
+      "percent_covered": 93.57798165137615,
+      "percent_covered_display": "94",
+      "missing_lines": 9,
+      "excluded_lines": 0,
+      "percent_statements_covered": 94.07894736842105,
+      "percent_statements_covered_display": "94",
+      "num_branches": 66,
+      "num_partial_branches": 5,
+      "covered_branches": 61,
+      "missing_branches": 5,
+      "percent_branches_covered": 92.42424242424242,
+      "percent_branches_covered_display": "92"
+    }
+  }
+}

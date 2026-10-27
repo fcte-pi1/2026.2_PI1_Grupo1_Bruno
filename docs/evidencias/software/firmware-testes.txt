@@ -1,0 +1,7 @@
+$ /var/tmp/pi1-validacao-software/bin/python -m coverage run --branch --data-file <TEMP>/firmware.coverage --source src/firmware --omit */test_*.py,*/tests/*,*/.venv/*,*/wifi_config.example.py,*/validar_software.py -m pytest src/firmware -q -ra
+
+...................... [ 26%]
+............................................. [ 81%]
+...............                                             [100%]
+82 passed, 90 subtests passed in 10.15s
+
