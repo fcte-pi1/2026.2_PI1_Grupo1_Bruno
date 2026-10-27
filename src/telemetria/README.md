@@ -29,11 +29,11 @@ python -m telemetria
 O simulador é a fonte padrão e o navegador abre em `http://localhost:8080`.
 
 ```bash
-# Linux: substitua a porta pela mostrada por python -m serial.tools.list_ports
+# linux: substitua a porta pela mostrada por python -m serial.tools.list_ports
 python -m telemetria --serial /dev/ttyUSB0 --baud 115200
-# Windows: COM3, COM4 etc.
+# windows: com3, com4 etc.
 python -m telemetria --serial COM3 --baud 115200
-# PC escuta; ESP32 conectado ao Wi-Fi em STA abre conexão como cliente
+# pc escuta; esp32 conectado ao wi-fi em sta abre conexão como cliente
 python -m telemetria --tcp-listen 0.0.0.0:8765
 ```
 
@@ -66,25 +66,25 @@ A porta serial deve estar livre: feche mpremote, REPL e monitores seriais antes 
 O gerador usa `SimuladorRobo`, com a mesma semente e tempos calculados por passo, e produz os mesmos bytes independentemente da velocidade da máquina. A execução tem `start`, amostras/falhas e `finish`. Todas as leituras são simuladas.
 
 ```bash
-# Arquivo determinístico, sem esperar 10 segundos (não sobrescreve arquivo existente)
+# arquivo determinístico, sem esperar 10 segundos (não sobrescreve arquivo existente)
 python -m telemetria.gerador --seed 7 --taxa 10 --duracao 10 --rapido --output fake.jsonl
-# Playback no painel, lento ou rápido
+# playback no painel, lento ou rápido
 python -m telemetria --arquivo fake.jsonl --taxa 2
 python -m telemetria --arquivo fake.jsonl --rapido
-# Playback sem UI; stdout contém somente Frames JSONL normalizados
+# playback sem ui; stdout contém somente frames jsonl normalizados
 python -m telemetria --arquivo fake.jsonl --headless --rapido > validado.jsonl
 ```
 
 Para exercitar TCP com processos separados:
 
 ```bash
-# Terminal 1: receptor com captura JSONL limitada
+# terminal 1: receptor com captura jsonl limitada
 python -m telemetria --tcp-listen 127.0.0.1:8765 --captura captura.jsonl
-# Terminal 2: fake lento (cliente TCP)
+# terminal 2: fake lento (cliente tcp)
 python -m telemetria.gerador --tcp 127.0.0.1:8765 --taxa 2 --duracao 20
-# Ou fake rápido para testar sobrecarga
+# ou fake rápido para testar sobrecarga
 python -m telemetria.gerador --tcp 127.0.0.1:8765 --taxa 1000 --duracao 20 --rapido
-# Depois: mesma decodificação, sem UI
+# depois: mesma decodificação, sem ui
 python -m telemetria --arquivo captura.jsonl --headless --rapido > reproduzido.jsonl
 ```
 
@@ -101,6 +101,12 @@ O arquivo capturado mantém a ordem recebida, incluindo duplicatas válidas; o f
 Cada leitura de transporte tem no máximo 1024 bytes. Cada escrita da captura é aguardada em thread, sem fila ilimitada; uma unidade lenta aplica backpressure ao receptor. Ao atingir o limite de disco, a captura para em uma fronteira de registro e o receptor continua, com aviso em stderr. Erros ao abrir ou escrever também suspendem a captura com diagnóstico em stderr, mantendo a recepção. Um arquivo existente não é sobrescrito. Registros incompletos no EOF são descartados.
 
 ## Contrato e tolerância a falhas
+
+O receptor aceita telemetria v1 e a [extensão v2 de navegação](../../docs/protocolo/v2.md),
+que acrescenta `navigation` com posição em células, orientação cardinal e rota
+planejada. Captura, playback e modo headless preservam a versão e esses dados.
+A UI atual não desenha a navegação. O v1 continua rejeitando `navigation`;
+somente as versões 1 e 2 são aceitas. Comandos/ACK seguem em v1.
 
 O contrato versionado em `telemetria/modelos.py` e na documentação INT03 é a referência. Cada mensagem é JSON UTF-8 terminado em LF, com **até 4096 bytes de payload, excluindo LF**. Campos principais: `schema_version`, `robot_id`, `boot_id`, `run_id`, `maze_id`, `seq`, `t_ms`, `event` (`start`, `sample`, `map_update`, `fault`, `finish`) e `state`. Cada leitura explicita `value`, `unit`, `source` e `valid`; o mapa e `telemetry_stats` são opcionais.
 
@@ -177,4 +183,4 @@ ruff check .
 ruff format --check .
 ```
 
-Os testes exercitam parser fragmentado e sobrecarregado, contrato, pySerial real `loop://`, PTY no Linux, TCP localhost, desconexão/reconexão, cancelamento e fechamento de recursos, captura limitada, disco cheio, playback e CLI. A suíte também cobre simulador, estado e interface NiceGUI. **Validação física com ESP32, serial USB, Wi-Fi de bancada, taxa real e robô montado permanece pendente.** Nenhum resultado dos testes locais deve ser interpretado como medição no robô.
+Os testes exercitam parser fragmentado e sobrecarregado, contrato, pySerial real `loop://`, PTY no Linux, TCP localhost, desconexão/reconexão, cancelamento e fechamento de recursos, captura limitada, disco cheio, playback e CLI. A suíte também cobre simulador, estado e interface NiceGUI.

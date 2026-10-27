@@ -3,7 +3,11 @@
 Para ligar a ESP32-S3-DevKitC-1 N8R2, siga o [guia de bancada](CONEXAO_ESP32_S3.md).
 `telemetry.py` é o núcleo portátil: depende só de `json`; não usa Pydantic,
 threads, flash ou drivers de motores. O formato completo fica no
-[contrato v1](../../docs/protocolo/README.md).
+[contrato v1](../../docs/protocolo/README.md) e na
+[extensão v2 de navegação](../../docs/protocolo/v2.md). O emissor usa v1 por
+padrão; passe `schema_version=2` ao construtor para transmitir `navigation`
+com pose e rota. Os dois formatos são validados antes de enfileirar; v1
+continua rejeitando campos da extensão.
 
 ## Uso na aplicação do robô
 
@@ -16,21 +20,21 @@ publisher = TelemetryPublisher(
     robot_id=robot_id, boot_id=boot_id, run_id=None, maze_id=None,
     clock_ms=clock, sample_hz=10, queue_capacity=8,
 )
-writer = BoundedWriter(uart.write, uart.deinit)  # UART já configurada sem espera.
+writer = BoundedWriter(uart.write, uart.deinit)  # uart configurada sem espera
 
-# A aplicação cria a corrida; reconexão nunca faz isso.
+# a aplicação cria a corrida; reconexão nunca faz isso.
 publisher.run_id = novo_run_id
 publisher.maze_id = maze_id
 publisher.emit("start", "executando")
 
-# Após o controle, em cada iteração do laço existente:
+# após o controle, em cada iteração do laço existente:
 publisher.record_control_cycle(late=controle_atrasado)
 publisher.sample("executando", sensors={"frontal": reading(distancia_cm, "cm")})
 publisher.service(writer, byte_budget=256)
 
-# Quando o controle encerrar:
+# quando o controle encerrar:
 publisher.emit("finish", "concluido")
-# Continuar service() na fase parada para escoar a fila.
+# continuar service() na fase parada para escoar a fila.
 ```
 
 Os identificadores e leituras acima são fornecidos pela aplicação; não é um
