@@ -1,4 +1,11 @@
-# Firmware do Micromouse
+# _Firmware_
+## FW01 e FW03 — Base MicroPython e motores
+
+- [Ambiente, estrutura, gravação e smoke test](AMBIENTE.md)
+- [Controle dos motores e configuração pendente de Hardware](MOTORES.md)
+- [Evidências de validação e limitações](VALIDACAO_FW01_FW03.md)
+
+Esta pasta deverá armazenar arquivos referentes a:
 
 Comece pelo [guia da ESP32-S3-DevKitC-1 N8R2](CONEXAO_ESP32_S3.md).
 O script `board_smoke.py` permite comprovar placa → painel sem configurar motores

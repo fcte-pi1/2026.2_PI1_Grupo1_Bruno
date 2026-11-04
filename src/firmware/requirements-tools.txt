@@ -1,0 +1,3 @@
+# Somente no computador. Nao copiar estas dependencias para a ESP32.
+mpremote==1.26.1
+esptool==5.0.2
