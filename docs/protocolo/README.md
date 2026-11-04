@@ -8,6 +8,11 @@ de comando/ACK. O modelo executável está em
 Mudanças incompatíveis de campos, significado ou unidade exigem nova versão.
 Não há negociação nem conversão silenciosa de versões.
 
+A [extensão de telemetria v2](v2.md) acrescenta posição, orientação e rota
+planejada. O v1 abaixo permanece congelado: `navigation` é rejeitado em v1,
+inclusive quando `null`. O receptor atualizado aceita explicitamente telemetria
+v1 e v2; comandos/ACK continuam exclusivamente em v1.
+
 ## Transporte e limites
 
 | Item | Regra v1 |
@@ -29,10 +34,8 @@ CRLF é tolerado como espaço JSON final, mas o emissor produz LF. A conexão
 NiceGUI do navegador é interna ao painel: Socket.IO/WebSocket não faz parte
 deste transporte entre ESP32 e computador.
 
-Não há segredos no contrato ou no Git. A rede STA precisa ser confirmada no local
-do desafio; pode ser um roteador local sem Internet. Os adaptadores não assumem
-GPIOs nem modelo de placa enquanto INT02 (#22) estiver pendente. Limites de
-buffer e orçamento por ciclo estão em [FW09](../../src/firmware/TELEMETRY.md) e
+Credenciais de rede ficam na configuração local. Os limites de buffer e o
+orçamento por ciclo estão em [FW09](../../src/firmware/TELEMETRY.md) e
 [FW10](../../src/firmware/WIFI.md).
 
 ## Envelope de telemetria
@@ -123,9 +126,8 @@ snapshot antes da inclusão do próprio frame e aparecem no próximo envio.
 
 O contrato reserva os comandos abaixo. **Os adaptadores FW09/FW10 e o receptor
 TEL01 desta entrega são passivos para comandos**: não executam movimento,
-nem enviam comandos automaticamente. A ligação à máquina de estados/motores
-depende da FW08 e da confirmação do regulamento. Os modelos e exemplos permitem
-que essa integração futura seja feita com o mesmo envelope.
+nem enviam comandos automaticamente. Os modelos reservam os envelopes de
+comando e ACK para a integração com o controle local.
 
 Comando tem exatamente `schema_version`, `kind="command"`, `robot_id`, `boot_id`,
 `run_id`, `command_id`, `command` e `expires_at_ms`. `command_id` é string de
@@ -165,8 +167,8 @@ reset. Comparar identidades antes de retornar cache de outro robô/boot.
 O cliente aguarda ACK por **1000 ms**, pode retransmitir o mesmo envelope uma
 vez se ainda válido e, sem resposta, apresenta resultado desconhecido. Nunca
 cria outro ID nem inicia de novo para compensar ACK perdido. ACK confirma
-aceitação pelo controle; evidência de início/fim vem dos eventos. Sem hardware
-ou controlador, estes requisitos não significam que uma parada física foi validada.
+aceitação pelo controle; evidência de início/fim vem dos eventos. A execução
+dos comandos pertence ao controlador local.
 
 ## Perda, isolamento e reconexão
 
@@ -198,7 +200,7 @@ do histórico de proteção. Não se mistura tempo de dois boots no mesmo gráfi
   diagnóstico, comandos e ACK. Cada linha é um pacote independente.
 - [`invalidos.json`](invalidos.json): casos nomeados com pacote inválido;
   inclui rejeição de versão, tipos, unidades e payload obrigatório.
-- [`VALIDACAO.md`](VALIDACAO.md): comandos, resultados e pendências físicas.
+- [`VALIDACAO.md`](VALIDACAO.md): comandos e resultados dos testes.
 
 O JSON Schema cobre tipos, limites e campos permitidos. Condições entre campos
 (unidade por papel, evento/payload, coordenadas e máscaras, ACK coerente) são

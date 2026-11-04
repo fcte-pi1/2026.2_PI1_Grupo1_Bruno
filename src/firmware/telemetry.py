@@ -1,12 +1,8 @@
-"""Bounded JSON Lines telemetry core for CPython and MicroPython.
-
-No hardware, wall clock, logging, thread or transport dependency is imported.
-Call from the main loop, after control, never from an interrupt handler.
-"""
+"""telemetria jsonl com fila e escrita limitadas para micropython."""
 
 import json
 
-MAX_PAYLOAD_BYTES = 4096  # LF is additional to this limit.
+MAX_PAYLOAD_BYTES = 4096  # sem lf
 MAX_SAFE_INTEGER = 2**53 - 1
 CRITICAL_EVENTS = ("start", "finish", "fault")
 EVENTS = ("start", "sample", "map_update", "finish", "fault")
@@ -27,7 +23,6 @@ def _text(value, name, maximum, nullable=False):
 
 
 def reading(value, unit, source="measured", valid=True):
-    """Construct a contract reading; simulated measurements must say so."""
     result = {"value": value, "unit": unit, "source": source, "valid": valid}
     _reading(result)
     return result
@@ -55,8 +50,10 @@ def _reading(value, unit=None):
             raise ValueError("reading must be finite")
 
 
-def _validate_payload(event, payload):
+def _validate_payload(event, payload, schema_version=1):
     allowed = {"wheel_left", "wheel_right", "control_error", "sensors", "battery_voltage", "fault", "map"}
+    if schema_version == 2:
+        allowed.add("navigation")
     if set(payload) - allowed:
         raise ValueError("unknown payload field")
     if event != "fault" and payload.get("fault") is not None:
@@ -88,6 +85,61 @@ def _validate_payload(event, payload):
             raise ValueError("invalid fault message")
     if event == "map_update" or payload.get("map") is not None:
         _validate_map(payload.get("map"))
+    if payload.get("navigation") is not None:
+        _validate_navigation(payload["navigation"])
+        if payload.get("map") is not None:
+            for key in ("width", "height"):
+                if payload["map"][key] != payload["navigation"][key]:
+                    raise ValueError("map and navigation dimensions differ")
+
+
+def _validate_navigation(value):
+    if (
+        not isinstance(value, dict)
+        or set(value) - {"width", "height", "pose", "route"}
+        or not {"width", "height"}.issubset(value)
+    ):
+        raise ValueError("navigation requires dimensions and optional pose/route")
+    for key in ("width", "height"):
+        if type(value[key]) is not int or not 1 <= value[key] <= 32:
+            raise ValueError("invalid navigation dimensions")
+
+    def position(cell):
+        for key, limit in (("x", value["width"]), ("y", value["height"])):
+            if type(cell[key]) is not int or not 0 <= cell[key] < limit:
+                raise ValueError("navigation position outside maze")
+
+    def source(item):
+        if item["source"] not in ("simulated", "measured", "estimated"):
+            raise ValueError("invalid navigation source")
+
+    pose, route = value.get("pose"), value.get("route")
+    if pose is None and route is None:
+        raise ValueError("navigation requires pose or route")
+    if pose is not None:
+        if not isinstance(pose, dict) or set(pose) != {"x", "y", "heading", "source"}:
+            raise ValueError("pose requires x, y, heading and source")
+        position(pose)
+        source(pose)
+        if pose["heading"] not in ("N", "E", "S", "W"):
+            raise ValueError("invalid pose heading")
+    if route is not None:
+        if not isinstance(route, dict) or set(route) != {"source", "cells"}:
+            raise ValueError("route requires source and cells")
+        source(route)
+        cells = route["cells"]
+        if not isinstance(cells, list) or len(cells) > 1024:
+            raise ValueError("route requires at most 1024 cells")
+        previous = None
+        for cell in cells:
+            if not isinstance(cell, dict) or set(cell) != {"x", "y"}:
+                raise ValueError("invalid route cell")
+            position(cell)
+            if previous is not None and abs(previous["x"] - cell["x"]) + abs(previous["y"] - cell["y"]) != 1:
+                raise ValueError("route cells must share a face")
+            previous = cell
+        if pose is not None and cells and (pose["x"], pose["y"]) != (cells[0]["x"], cells[0]["y"]):
+            raise ValueError("route must start at the snapshot pose")
 
 
 def _validate_map(value):
@@ -120,11 +172,7 @@ def _validate_map(value):
 
 
 class TicksClock:
-    """Extend wrapping ticks using the port's documented ticks_diff function.
-
-    Poll at least once per half ticks period, including while disconnected.
-    Example: TicksClock(time.ticks_ms, time.ticks_diff).
-    """
+    """estende ticks; consultar antes de meio período, inclusive sem conexão."""
 
     def __init__(self, ticks_ms, ticks_diff):
         self._ticks = ticks_ms
@@ -143,12 +191,7 @@ class TicksClock:
 
 
 class BoundedWriter:
-    """Adapter around ONE nonblocking stream, replaced on reconnection.
-
-    write(buffer) must return a count or None, with a timeout of zero.
-    This adapter cannot make a blocking driver nonblocking. EAGAIN/EWOULDBLOCK
-    means no progress; other OSError values disconnect this stream.
-    """
+    """escrita não bloqueante; o stream deve usar timeout zero."""
 
     def __init__(self, write, close=None):
         self._write = write
@@ -168,7 +211,7 @@ class BoundedWriter:
             written = self._write(data)
         except OSError as error:
             code = error.args[0] if error.args else None
-            if code in (11, 35):  # EAGAIN / EWOULDBLOCK across supported ports.
+            if code in (11, 35):  # eagain / ewouldblock nos ports suportados
                 return 0
             self.disconnect()
             return 0
@@ -181,16 +224,19 @@ class BoundedWriter:
 
 
 class TelemetryPublisher:
-    """Finite FIFO, critical-event retention and bounded incremental writes.
-
-    Capacity includes the partially transmitted frame. Overload replaces the
-    oldest waiting noncritical frame. A sample never evicts map_update; critical
-    events may evict either. When all slots are critical (or pinned), reject the
-    incoming frame and count the loss. Accepted frames retain sequence order.
-    """
+    """fila limitada; frames parciais e eventos críticos têm prioridade."""
 
     def __init__(
-        self, robot_id, boot_id, run_id, maze_id, clock_ms, sample_hz=10, queue_capacity=8, include_stats=True
+        self,
+        robot_id,
+        boot_id,
+        run_id,
+        maze_id,
+        clock_ms,
+        sample_hz=10,
+        queue_capacity=8,
+        include_stats=True,
+        schema_version=1,
     ):
         _text(robot_id, "robot_id", 40)
         _text(boot_id, "boot_id", 40)
@@ -200,6 +246,9 @@ class TelemetryPublisher:
             raise ValueError("queue_capacity must be a positive integer")
         if type(sample_hz) is not int or not 1 <= sample_hz <= 1000:
             raise ValueError("sample_hz must be an integer from 1 to 1000")
+        if type(schema_version) is not int or schema_version not in (1, 2):
+            raise ValueError("unsupported schema_version")
+        self._schema_version = schema_version
         self.robot_id, self.boot_id = robot_id, boot_id
         self.run_id, self.maze_id = run_id, maze_id
         self._clock = clock_ms
@@ -207,7 +256,7 @@ class TelemetryPublisher:
         self._period = max(1, (1000 + sample_hz - 1) // sample_hz)
         self._last_sample = None
         self._capacity = queue_capacity
-        self._queue = []  # [event, encoded frame, write offset]
+        self._queue = []  # [evento, frame codificado, deslocamento de escrita]
         self._writer = None
         self._seq = 0
         self._include_stats = include_stats
@@ -243,7 +292,7 @@ class TelemetryPublisher:
         return self._enqueue(event, state, self._now(), payload)
 
     def sample(self, state, **payload):
-        """At most one sample per period; no catch-up bursts after delays."""
+        """limita a taxa sem compensar atrasos com rajadas."""
         now = self._now()
         if self._last_sample is not None and now - self._last_sample < self._period:
             return False
@@ -254,18 +303,19 @@ class TelemetryPublisher:
         if event not in EVENTS:
             raise ValueError("invalid event")
         _text(state, "state", 30)
-        # The application may change run/maze between runs; validate each time.
         _text(self.run_id, "run_id", 40, True)
         _text(self.maze_id, "maze_id", 20, True)
         if event in ("start", "finish") and self.run_id is None:
             raise ValueError("start and finish require an application run_id")
         if event == "map_update" and self.maze_id is None:
             raise ValueError("map_update requires maze_id")
+        if payload.get("navigation") is not None and self.maze_id is None:
+            raise ValueError("navigation requires maze_id")
         if self._seq > MAX_SAFE_INTEGER:
             raise ValueError("sequence exhausted for this boot")
-        _validate_payload(event, payload)
+        _validate_payload(event, payload, self._schema_version)
         frame = {
-            "schema_version": 1,
+            "schema_version": self._schema_version,
             "robot_id": self.robot_id,
             "boot_id": self.boot_id,
             "run_id": self.run_id,
@@ -306,12 +356,7 @@ class TelemetryPublisher:
         return True
 
     def service(self, writer, byte_budget=256):
-        """Make at most one write, offering at most byte_budget bytes.
-
-        After disconnect or writer replacement, retry the entire current frame
-        on the new stream. Bytes from two frames are never interleaved. Receiver
-        must reset its line buffer for every new connection.
-        """
+        """faz uma escrita limitada e reinicia o frame ao trocar de stream."""
         if type(byte_budget) is not int or byte_budget < 0:
             raise ValueError("byte_budget must be a nonnegative integer")
         if writer is not self._writer:

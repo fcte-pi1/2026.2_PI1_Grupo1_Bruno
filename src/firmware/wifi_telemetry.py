@@ -1,8 +1,4 @@
-"""Cliente STA/TCP cooperativo para ESP32 MicroPython (FW10).
-
-Execute step() depois do controle local; ele não espera pela rede.
-O publisher de telemetry.py mantém a única fila, limitada, de frames.
-"""
+"""telemetria sta/tcp cooperativa para esp32."""
 
 import errno
 import select
@@ -20,7 +16,7 @@ _PENDING = (errno.EINPROGRESS, errno.EALREADY, errno.EAGAIN, getattr(errno, "EWO
 
 
 def _ipv4(host):
-    """Aceita apenas IPv4 decimal: connect() não fará consulta DNS/mDNS."""
+    """aceita ipv4 literal para evitar resolução de nomes no controle."""
     if not isinstance(host, str):
         raise ValueError("host deve ser um endereço IPv4 literal")
     parts = host.split(".")
@@ -37,12 +33,7 @@ def _ipv4(host):
 
 
 class WifiTelemetry:
-    """Avança uma transição por chamada; não reinicia a execução do robô.
-
-    wlan deve ser network.WLAN(network.WLAN.IF_STA), já criada fora do
-    controle. A construção ativa a interface e desliga retries internos.
-    socket_module/select_module/ticks_diff permitem testes sem hardware.
-    """
+    """mantém a conexão sem bloquear o controle local."""
 
     def __init__(
         self,
@@ -90,7 +81,7 @@ class WifiTelemetry:
         self.state = "idle"
         self.last_error = None
         self.reconnects = 0
-        # Setup pode levar tempo no driver; faça antes de iniciar os motores.
+        # a configuração do driver deve ocorrer antes de iniciar os motores
         wlan.active(True)
         wlan.config(reconnects=0)
 
@@ -128,7 +119,6 @@ class WifiTelemetry:
         self.state = "connected"
         self.last_error = None
         self._poll.modify(self._sock, self._select.POLLIN)
-        # Uma nova instância faz o publisher recomeçar um frame parcial do zero.
         self.writer = BoundedWriter(self._write)
 
     def _start_tcp(self, now):
@@ -149,8 +139,8 @@ class WifiTelemetry:
             self._established()
 
     def _complete_connect(self):
-        # MicroPython ESP32 v1.26 não expõe getsockopt. Lá, uma segunda
-        # connect não bloqueante distingue EISCONN de EALREADY/erro do lwIP.
+        # micropython esp32 v1.26 não expõe getsockopt; a segunda tentativa
+        # distingue eisconn de ealready ou erro do lwip
         sm = self._socket_module
         if hasattr(self._sock, "getsockopt") and hasattr(sm, "SO_ERROR"):
             error = self._sock.getsockopt(sm.SOL_SOCKET, sm.SO_ERROR)
@@ -177,15 +167,14 @@ class WifiTelemetry:
             sent = 0
         if sent:
             self._blocked_since = None
-            # Só uma transmissão efetiva reinicia o backoff: aceitar TCP e
-            # cair imediatamente não cria tempestade de reconexões.
+            # reiniciar só após progresso evita reconexões em sequência
             self._backoff = self._backoff_initial
         elif self._blocked_since is None:
             self._blocked_since = self._now
         return sent or 0
 
     def step(self, now_ms):
-        """Retorna writer conectado ou None; nunca dorme, resolve DNS ou espera I/O."""
+        """avança a conexão sem esperar pela rede."""
         self._now = now_ms
         if self.state == "closed":
             return None
@@ -226,8 +215,7 @@ class WifiTelemetry:
             ):
                 self._fail("write_timeout", now_ms)
                 return None
-            # poll(0) e no máximo uma leitura de 64 bytes: dados remotos são
-            # descartados, jamais interpretados como comandos de movimento.
+            # dados recebidos são descartados; comandos não são executados aqui
             events = self._poll.poll(0)
             if events:
                 flags = events[0][1]
@@ -252,7 +240,6 @@ class WifiTelemetry:
         return self.writer if self.connected else None
 
     def service(self, publisher, now_ms, byte_budget=256):
-        """Manutenção do link e um envio limitado, após atualizar o controle."""
         writer = self.step(now_ms)
         if writer is None:
             return 0

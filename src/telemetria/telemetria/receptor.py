@@ -1,4 +1,4 @@
-"""Fontes JSONL passivas. Nunca transmitem comandos ao robô."""
+"""recepção passiva de telemetria jsonl por serial e tcp."""
 
 import asyncio
 import json
@@ -11,7 +11,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from telemetria.modelos import MAX_FRAME_BYTES, Evento, Frame, LinkAberto, LinkFechado
+from telemetria.modelos import FRAMES_TELEMETRIA, MAX_FRAME_BYTES, Evento, Frame, LinkAberto, LinkFechado
 
 logger = logging.getLogger(__name__)
 MAX_PAYLOAD = MAX_FRAME_BYTES
@@ -41,7 +41,7 @@ def _constante_invalida(valor: str) -> Any:
 
 
 class DecodificadorJSONL:
-    """LF termina payload de até 4096 bytes; overflow descarta até o próximo LF."""
+    """descarta linhas acima do limite até o próximo lf."""
 
     def __init__(self, estatisticas: EstatisticasRecepcao | None = None) -> None:
         self.estatisticas = estatisticas or EstatisticasRecepcao()
@@ -64,12 +64,11 @@ class DecodificadorJSONL:
                 continue
             if not self._descartando:
                 try:
-                    # Decodificar explicitamente impede aceitação de UTF-8 substituído.
                     texto = self._buffer.decode("utf-8", errors="strict")
-                    json.loads(
+                    objeto = json.loads(
                         texto, object_pairs_hook=_objeto_sem_duplicadas, parse_constant=_constante_invalida
                     )
-                    frame = Frame.model_validate_json(texto)
+                    frame = FRAMES_TELEMETRIA.validate_python(objeto)
                 except (UnicodeDecodeError, ValidationError, ValueError, RecursionError):
                     self.estatisticas.invalidos += 1
                     logger.debug("linha rejeitada: UTF-8, JSON ou contrato inválido")
@@ -88,7 +87,7 @@ class DecodificadorJSONL:
 
 
 class _FilaEventos:
-    """Preserva ordem. Cheia: remove sample antigo; só críticos: backpressure."""
+    """remove amostras antigas sob carga; eventos aplicam backpressure."""
 
     def __init__(self, capacidade: int, estatisticas: EstatisticasRecepcao) -> None:
         if capacidade < 1:
@@ -129,7 +128,7 @@ class _FilaEventos:
 
 
 async def _thread(funcao: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
-    """Espera a operação finita encerrar antes de fechar o recurso na thread."""
+    """aguarda a operação na thread antes de propagar o cancelamento."""
     tarefa = asyncio.create_task(asyncio.to_thread(funcao, *args, **kwargs))
     try:
         return await asyncio.shield(tarefa)
@@ -205,7 +204,6 @@ class FonteSerial(_FonteReceptora):
             porta = None
             decodificador = DecodificadorJSONL(self.estatisticas)
             try:
-                # Abrir é curto; cancelamento sempre recolhe/fecha uma porta recém-aberta.
                 abertura = asyncio.create_task(
                     asyncio.to_thread(
                         serial.serial_for_url,
@@ -241,7 +239,7 @@ class FonteSerial(_FonteReceptora):
 
 
 class FonteTCPListen(_FonteReceptora):
-    """O PC escuta; o ESP32 em STA conecta como cliente. Um cliente por vez."""
+    """servidor tcp com um cliente por vez."""
 
     def __init__(
         self, host: str, porta: int, fila_max: int = 256, captura: Any = None, timeout_s: float = 0.5
@@ -272,7 +270,6 @@ class FonteTCPListen(_FonteReceptora):
                 try:
                     dados = await asyncio.wait_for(leitor.read(1024), timeout=self.timeout_s)
                 except TimeoutError:
-                    # Silêncio não encerra run nem reconecta: EstadoPainel indica stale.
                     continue
                 if not dados:
                     break

@@ -1,8 +1,4 @@
-"""Teste manual de comunicação da ESP32-S3-DevKitC-1; não aciona motores.
-
-No mpremote/REPL: import board_smoke; board_smoke.run("wifi")
-Serial dedicada opcional: board_smoke.run("serial") em UART1, TX17/RX18.
-"""
+"""teste de comunicação da esp32-s3 por wi-fi ou uart1, sem motores."""
 
 from telemetry import BoundedWriter, TelemetryPublisher, TicksClock
 
@@ -41,12 +37,12 @@ def run(transport="wifi", duration_s=30):
             wifi_config.PORT,
         )
     else:
-        # Só para bancada com GPIO17/18 livres e adaptador TTL 3,3 V separado.
+        # só para bancada com gpio17/18 livres e adaptador ttl 3,3 v separado.
         uart = machine.UART(1, baudrate=115200, tx=17, rx=18, timeout=0, timeout_char=0, txbuf=512)
         link = BoundedWriter(uart.write, uart.deinit)
     try:
         while clock() < duration_s * 1000:
-            publisher.sample("pronto")  # Sem corrida e sem inventar leituras de sensores.
+            publisher.sample("pronto")
             if transport == "wifi":
                 link.service(publisher, time.ticks_ms(), byte_budget=256)
             else:

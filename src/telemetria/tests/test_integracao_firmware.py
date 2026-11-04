@@ -1,9 +1,9 @@
-"""Integra publisher portátil, adaptador TCP e receptor/painel reais no host."""
-
 import asyncio
 import importlib
 from contextlib import aclosing
 from pathlib import Path
+
+import pytest
 
 from telemetria.captura import CapturaJSONL, FonteArquivo
 from telemetria.coleta import aplicar
@@ -23,7 +23,8 @@ class WlanLocal:
         return True
 
 
-async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch, tmp_path):
+@pytest.mark.parametrize("schema_version", [1, 2])
+async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch, tmp_path, schema_version):
     pasta = Path(__file__).resolve().parents[2] / "firmware"
     monkeypatch.syspath_prepend(str(pasta))
     core = importlib.import_module("telemetry")
@@ -50,7 +51,9 @@ async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch,
                 await asyncio.sleep(0.001)
             link = wifi.WifiTelemetry(WlanLocal(), "fake-ap", "fake", "127.0.0.1", fonte.porta_efetiva)
             now = [0]
-            publisher = core.TelemetryPublisher("robot-e2e", "boot-e2e", "run-e2e", "2x2", lambda: now[0])
+            publisher = core.TelemetryPublisher(
+                "robot-e2e", "boot-e2e", "run-e2e", "2x2", lambda: now[0], schema_version=schema_version
+            )
             publisher.emit("start", "executando")
             for ciclo in range(100):
                 now[0] = ciclo * 10
@@ -59,6 +62,21 @@ async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch,
                 if ciclo == 40:
                     publisher.emit("fault", "executando", fault={"code": "SIM_SENSOR", "message": "simulado"})
                 if ciclo == 60:
+                    navegacao = (
+                        {
+                            "navigation": {
+                                "width": 2,
+                                "height": 2,
+                                "pose": {"x": 0, "y": 0, "heading": "N", "source": "simulated"},
+                                "route": {
+                                    "source": "simulated",
+                                    "cells": [{"x": 0, "y": 0}, {"x": 0, "y": 1}],
+                                },
+                            }
+                        }
+                        if schema_version == 2
+                        else {}
+                    )
                     publisher.emit(
                         "map_update",
                         "executando",
@@ -68,6 +86,7 @@ async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch,
                             "source": "simulated",
                             "cells": [{"x": 0, "y": 0, "walls": 8, "known": 15}],
                         },
+                        **navegacao,
                     )
                 link.service(publisher, now[0], byte_budget=97)
                 await asyncio.sleep(0.001)
@@ -80,6 +99,11 @@ async def test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida(monkeypatch,
             await consumidor
         assert {frame.event for frame in recebidos} == {"start", "sample", "fault", "map_update", "finish"}
         assert {frame.run_id for frame in recebidos} == {"run-e2e"}
+        assert {frame.schema_version for frame in recebidos} == {schema_version}
+        if schema_version == 2:
+            mapa = next(frame for frame in recebidos if frame.event == "map_update")
+            assert mapa.navigation.pose.heading == "N"
+            assert [(cell.x, cell.y) for cell in mapa.navigation.route.cells] == [(0, 0), (0, 1)]
         assert [frame.seq for frame in recebidos] == sorted({frame.seq for frame in recebidos})
         assert estado.ultimo_frame.event == "finish"
         assert estado.descartados == 0

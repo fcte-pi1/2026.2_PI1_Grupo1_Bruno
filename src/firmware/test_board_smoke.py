@@ -1,5 +1,3 @@
-"""Exercita o script de bancada com APIs falsas; não é ensaio na placa."""
-
 import json
 import sys
 import types
@@ -22,7 +20,6 @@ class BoardSmokeTests(unittest.TestCase):
             return types.SimpleNamespace(write=write, deinit=lambda: closed.append("serial"))
 
         def write(chunk):
-            # Escritas curtas também no script que a equipe executará na placa.
             count = min(41, len(chunk))
             data.extend(chunk[:count])
             return count

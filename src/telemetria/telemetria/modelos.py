@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator, model_validator
 
 VERSAO_CONTRATO = 1
-MAX_FRAME_BYTES = 4096  # UTF-8, sem o delimitador LF.
+MAX_FRAME_BYTES = 4096  # utf-8, sem lf
 TAXA_INICIAL_HZ = 10
 MAX_INTEIRO = 2**53 - 1
 
@@ -123,6 +123,68 @@ class Frame(Versionado):
         if any(not 1 <= len(nome) <= 24 or leitura.unit != "cm" for nome, leitura in self.sensors.items()):
             raise ValueError("sensores exigem nome de 1..24 caracteres e unidade cm")
         return self
+
+
+class Posicao(ModeloContrato):
+    x: int = Field(ge=0, le=31)
+    y: int = Field(ge=0, le=31)
+
+
+class Pose(Posicao):
+    heading: Literal["N", "E", "S", "W"]
+    source: Origem
+
+
+class RotaPlanejada(ModeloContrato):
+    source: Origem
+    cells: list[Posicao] = Field(max_length=1024)
+
+    @model_validator(mode="after")
+    def continuidade(self) -> "RotaPlanejada":
+        for anterior, atual in zip(self.cells, self.cells[1:], strict=False):
+            if abs(anterior.x - atual.x) + abs(anterior.y - atual.y) != 1:
+                raise ValueError("rota exige células consecutivas vizinhas por uma face")
+        return self
+
+
+class Navegacao(ModeloContrato):
+    width: int = Field(ge=1, le=32)
+    height: int = Field(ge=1, le=32)
+    pose: Pose | None = None
+    route: RotaPlanejada | None = None
+
+    @model_validator(mode="after")
+    def coordenadas(self) -> "Navegacao":
+        if self.pose is None and self.route is None:
+            raise ValueError("navigation exige pose ou route")
+        posicoes = ([self.pose] if self.pose is not None else []) + (self.route.cells if self.route else [])
+        if any(posicao.x >= self.width or posicao.y >= self.height for posicao in posicoes):
+            raise ValueError("posição fora do mapa de navegação")
+        if self.pose is not None and self.route is not None and self.route.cells:
+            inicio = self.route.cells[0]
+            if (inicio.x, inicio.y) != (self.pose.x, self.pose.y):
+                raise ValueError("rota deve começar na pose do mesmo snapshot")
+        return self
+
+
+class FrameV2(Frame):
+    schema_version: Literal[2]
+    navigation: Navegacao | None = None
+
+    @model_validator(mode="after")
+    def contexto_navegacao(self) -> "FrameV2":
+        if self.navigation is not None:
+            if self.maze_id is None:
+                raise ValueError("navigation exige maze_id")
+            if self.map is not None and (self.map.width, self.map.height) != (
+                self.navigation.width,
+                self.navigation.height,
+            ):
+                raise ValueError("map e navigation exigem as mesmas dimensões")
+        return self
+
+
+FRAMES_TELEMETRIA = TypeAdapter(Frame | FrameV2)
 
 
 class Comando(Versionado):

@@ -1,5 +1,3 @@
-"""FW10: rede simulada e sockets TCP reais locais; sem alegar ensaio físico."""
-
 import errno
 import json
 import select
@@ -105,7 +103,7 @@ class FakePoll:
     def poll(self, timeout):
         assert timeout == 0
         if self.sock.flags:
-            # MicroPython pode retornar mais de dois itens por evento.
+            # micropython pode retornar mais de dois itens por evento.
             return [(self.sock, self.sock.flags, "extra")]
         return []
 
@@ -336,8 +334,6 @@ class WifiTests(unittest.TestCase):
 
 
 class LocalTcpTests(unittest.TestCase):
-    """O caminho SO_ERROR também usa o kernel real, sem ESP32 ou rede externa."""
-
     def test_localhost_complete_frames_and_reconnect_after_app_restart(self):
         server = socket.socket()
         self.addCleanup(server.close)
@@ -381,7 +377,7 @@ class LocalTcpTests(unittest.TestCase):
         self.assertEqual(json.loads(data)["event"], "start")
         accepted.close()
         server.close()
-        # O app fica ausente por um intervalo e depois volta à mesma porta.
+        # o app fica ausente por um intervalo e depois volta à mesma porta.
         for _ in range(20):
             link.service(publisher, now())
         restarted = socket.socket()

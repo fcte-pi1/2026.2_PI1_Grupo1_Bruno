@@ -38,9 +38,7 @@ controle. Tentativas internas ilimitadas de Wi-Fi são desativadas com
 Em CPython, a conclusão de connect é verificada com SO_ERROR. No port ESP32
 MicroPython 1.26, que não expõe getsockopt, uma segunda connect não bloqueante
 confirma EISCONN; EALREADY continua aguardando. Timeout/erro fecha a sessão.
-Isso limita trabalho cooperativo; rádio, driver e alocações ainda exigem
-medição de memória e jitter no hardware. TCP sem ACK de aplicação também
-pode perder um frame já aceito pelo buffer do SO.
+TCP sem ACK de aplicação pode perder um frame já aceito pelo buffer do SO.
 
 ## Verificar
 
@@ -49,10 +47,9 @@ cd src/firmware
 python -m unittest test_telemetry test_wifi_telemetry test_board_smoke -v
 ```
 
-Fakes cobrem Wi-Fi ausente, backoff, timeout, EAGAIN, parciais e rollover. O
-localhost usa TCP real e reinicia o servidor preservando a corrida. Para
-validar rádio/placa e reinício do painel, execute o [roteiro de bancada](CONEXAO_ESP32_S3.md).
-Até esse ensaio, os resultados são do computador e não do robô.
+Os testes cobrem Wi-Fi ausente, backoff, timeout, EAGAIN, parciais e rollover.
+O teste localhost reinicia o servidor e mantém a corrida. Para executar na
+placa, siga o [roteiro de bancada](CONEXAO_ESP32_S3.md).
 
 Referências: [WLAN/STA](https://docs.micropython.org/en/v1.26.0/esp32/quickref.html#networking),
 [socket](https://docs.micropython.org/en/v1.26.0/library/socket.html),
