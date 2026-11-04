@@ -45,7 +45,7 @@ def test_campos_opcionais_podem_faltar():
         boot_id="boot-a",
         seq=0,
         t_ms=0,
-        event="start",
+        event="sample",
         state="pronto",
     )
     assert frame.wheel_left is None
