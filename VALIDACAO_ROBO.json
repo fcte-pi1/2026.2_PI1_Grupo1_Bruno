@@ -1,0 +1,23 @@
+{
+  "prepared_date": "2026-11-19",
+  "unit_tests_passed": 36,
+  "random_maze_scenarios": 200,
+  "compile_check": "passed (CPython)",
+  "new_firmware_tested_on_esp": false,
+  "physical_calibration": "pending",
+  "flashed": false,
+  "pinout_source": "PDF da planilha confirmado pelo usuario",
+  "files": {
+    "src/firmware/robot/__init__.py": "cd0046231c4a64f315f1fff9e25a3bfaf09855c4c68c2dc693a24f7eb2750f35",
+    "src/firmware/robot/app.py": "6228adfef10607ac17c263abdfb8e3dd385274c9ac764c3d4f2abef863f613ed",
+    "src/firmware/robot/config.py": "471e323cddc563ac457132b3a9bf1d47713a621bdddc7a8ea6e639ae4cd10076",
+    "src/firmware/robot/control.py": "7af41e9f795e96637a2e6d8e235180c49b684799f1456bec1f083d846adba54a",
+    "src/firmware/robot/hardware.py": "db9db27c928de2fa38c1a2aaeef38e3a3e4416edb36c529429a22f791a7a46a2",
+    "src/firmware/robot/planner.py": "6e5661e2ebea357c41eaba2903621079c23fb01750dae89795af4927b10ba7e4",
+    "src/firmware/main_robot.py": "5ed35956d537bd9eb4c1eae3e7adada313ad25d57c34500f42db53db8e490bd8",
+    "LEIA_PRIMEIRO_ROBO.md": "09be97615811870943949cf196302799d9fd0e5b1203159512ba474990857143",
+    "tools/calibrar_robot.py": "13a416ae8749d26ccec2aa7298c307b09e71f483ca6de924a214c0b2f050abe4",
+    "tests/test_robot.py": "6e9a68494d5a1432272b06296a5ef7eeaf2659fe422babf41e3416a464caf257",
+    "tests/test_robot_hardware.py": "4f0432913534dcfb5f652cdac16514040fc4aac8b2d8f63db5d34179f604ad91"
+  }
+}
