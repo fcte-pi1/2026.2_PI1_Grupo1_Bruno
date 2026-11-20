@@ -64,3 +64,12 @@ O [contrato v1 de telemetria e comandos](docs/protocolo/README.md) integra o
 [serial](src/firmware/TELEMETRY.md) ou [Wi-Fi/TCP](src/firmware/WIFI.md).
 Há fontes simuladas, captura/reprodução e testes sem hardware. A validação
 na ESP32 e no robô permanece pendente; veja as [evidências](docs/protocolo/VALIDACAO.md).
+
+## Navegacao autonoma experimental
+
+O [guia do robo](LEIA_PRIMEIRO_ROBO.md) descreve o pacote `src/firmware/robot`,
+os modos de patrulha e exploracao, a instalacao e a calibracao obrigatoria.
+A pinagem deste pacote segue a planilha da montagem de bancada e difere do
+INT02. A navegacao inicia bloqueada ate validar estabilidade e medidas reais.
+Os [resultados de validacao](VALIDACAO_ROBO.json) registram testes no computador;
+a validacao fisica do novo firmware permanece pendente.
