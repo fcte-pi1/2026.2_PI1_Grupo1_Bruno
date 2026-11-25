@@ -1,0 +1,8 @@
+ok   test_dead_end_and_replan
+ok   test_max_steps_guard
+ok   test_multiple_goals_picks_reachable
+ok   test_no_route
+ok   test_open_maze_shortest
+ok   test_random_mazes_all_sizes
+ok   test_return_uses_only_visited
+todos os testes passaram

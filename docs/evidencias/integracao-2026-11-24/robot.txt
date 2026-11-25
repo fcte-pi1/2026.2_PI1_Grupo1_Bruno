@@ -1,0 +1,41 @@
+test_action_limit (test_robot.AppTests.test_action_limit) ... ok
+test_bench_pulse_bounded_and_stopped (test_robot.AppTests.test_bench_pulse_bounded_and_stopped) ... ok
+test_bench_pulse_requires_explicit_lifted (test_robot.AppTests.test_bench_pulse_requires_explicit_lifted) ... ok
+test_button_during_motion_stops (test_robot.AppTests.test_button_during_motion_stops) ... ok
+test_default_calibration_blocks_motion (test_robot.AppTests.test_default_calibration_blocks_motion) ... ok
+test_each_missing_calibration_blocks (test_robot.AppTests.test_each_missing_calibration_blocks) ... ok
+test_global_deadline (test_robot.AppTests.test_global_deadline) ... ok
+test_grid_geometry_requires_measurement (test_robot.AppTests.test_grid_geometry_requires_measurement) ... ok
+test_grid_pose_not_committed_on_incomplete_move (test_robot.AppTests.test_grid_pose_not_committed_on_incomplete_move) ... ok
+test_jog_limited_and_stability_required (test_robot.AppTests.test_jog_limited_and_stability_required) ... ok
+test_obstacle_appearing_during_movement (test_robot.AppTests.test_obstacle_appearing_during_movement) ... ok
+test_scan_failure_never_means_open (test_robot.AppTests.test_scan_failure_never_means_open) ... ok
+test_exception_stops_even_after_power (test_robot.MotionTests.test_exception_stops_even_after_power) ... ok
+test_forward_reaches_both_targets_and_stops (test_robot.MotionTests.test_forward_reaches_both_targets_and_stops) ... ok
+test_invalid_sensor_blocks_before_power (test_robot.MotionTests.test_invalid_sensor_blocks_before_power) ... ok
+test_obstacle_blocks_before_power (test_robot.MotionTests.test_obstacle_blocks_before_power) ... ok
+test_ramp_limits_first_command (test_robot.MotionTests.test_ramp_limits_first_command) ... ok
+test_sensor_loss_during_motion (test_robot.MotionTests.test_sensor_loss_during_motion) ... ok
+test_stall_of_one_wheel_stops_both (test_robot.MotionTests.test_stall_of_one_wheel_stops_both) ... ok
+test_ticks_wrap (test_robot.MotionTests.test_ticks_wrap) ... ok
+test_timeout_even_when_encoder_changes (test_robot.MotionTests.test_timeout_even_when_encoder_changes) ... ok
+test_turn_directions_and_180 (test_robot.MotionTests.test_turn_directions_and_180) ... ok
+test_turn_requires_all_clearances (test_robot.MotionTests.test_turn_requires_all_clearances) ... ok
+test_wrong_encoder_direction (test_robot.MotionTests.test_wrong_encoder_direction) ... ok
+test_200_random_mazes_loops_deadends_arbitrary_start (test_robot.PlannerTests.test_200_random_mazes_loops_deadends_arbitrary_start) ... ok
+test_ambiguous_or_invalid_wall (test_robot.PlannerTests.test_ambiguous_or_invalid_wall) ... ok
+test_blocked_return (test_robot.PlannerTests.test_blocked_return) ... ok
+test_commit_contract (test_robot.PlannerTests.test_commit_contract) ... ok
+test_limit_and_goal (test_robot.PlannerTests.test_limit_and_goal) ... ok
+test_patrol_decisions (test_robot.PlannerTests.test_patrol_decisions) ... ok
+test_invalid_pulse_and_range (test_robot_hardware.HardwareTests.test_invalid_pulse_and_range) ... ok
+test_ping_spacing_across_sensors (test_robot_hardware.HardwareTests.test_ping_spacing_across_sensors) ... ok
+test_pinout_and_encoder_phase (test_robot_hardware.HardwareTests.test_pinout_and_encoder_phase) ... ok
+test_reverse_zeros_other_pin_first_and_caps (test_robot_hardware.HardwareTests.test_reverse_zeros_other_pin_first_and_caps) ... ok
+test_scan_median_and_invalid (test_robot_hardware.HardwareTests.test_scan_median_and_invalid) ... ok
+test_scan_stops_motors (test_robot_hardware.HardwareTests.test_scan_stops_motors) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.263s
+
+OK

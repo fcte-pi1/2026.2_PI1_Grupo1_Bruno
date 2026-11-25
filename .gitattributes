@@ -1,0 +1,3 @@
+# Preserve PDF bytes and the exact Markdown source used for this delivery.
+output/pdf/*.pdf binary
+"docs/7.5 - Testes de integra\303\247\303\243o.md" text eol=lf

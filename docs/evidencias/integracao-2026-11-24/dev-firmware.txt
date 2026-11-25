@@ -1,0 +1,144 @@
+test_boot_desabilitado (test_aplicacao.TestAplicacao.test_boot_desabilitado) ... ok
+test_saida_normal_erro_e_interrupcao_param (test_aplicacao.TestAplicacao.test_saida_normal_erro_e_interrupcao_param) ... ok
+test_ausencia_explicita_nao_vira_zero (test_bateria.TestBateria.test_ausencia_explicita_nao_vira_zero) ... ok
+test_baixa_inclui_o_limiar (test_bateria.TestBateria.test_baixa_inclui_o_limiar) ... ok
+test_baixa_tensao_e_medida_valida_que_solicita_parada (test_bateria.TestBateria.test_baixa_tensao_e_medida_valida_que_solicita_parada) ... ok
+test_calibracao_de_ganho_e_offset (test_bateria.TestBateria.test_calibracao_de_ganho_e_offset) ... ok
+test_conversao_por_divisor (test_bateria.TestBateria.test_conversao_por_divisor) ... ok
+test_erro_de_aquisicao (test_bateria.TestBateria.test_erro_de_aquisicao) ... ok
+test_erro_de_programacao_nao_e_ocultado (test_bateria.TestBateria.test_erro_de_programacao_nao_e_ocultado) ... ok
+test_falha_nao_apaga_bloqueio_de_baixa (test_bateria.TestBateria.test_falha_nao_apaga_bloqueio_de_baixa) ... ok
+test_histerese_evita_oscilacao (test_bateria.TestBateria.test_histerese_evita_oscilacao) ... ok
+test_leituras_adc_incoerentes (test_bateria.TestBateria.test_leituras_adc_incoerentes) ... ok
+test_limite_maximo_do_pacote_e_valido (test_bateria.TestBateria.test_limite_maximo_do_pacote_e_valido) ... ok
+test_offset_nao_pode_produzir_tensao_negativa (test_bateria.TestBateria.test_offset_nao_pode_produzir_tensao_negativa) ... ok
+test_origem_medida (test_bateria.TestBateria.test_origem_medida) ... ok
+test_rejeita_configuracao_fisica_invalida (test_bateria.TestBateria.test_rejeita_configuracao_fisica_invalida) ... ok
+test_rejeita_divisor_sem_margem_adc (test_bateria.TestBateria.test_rejeita_divisor_sem_margem_adc) ... ok
+test_rejeita_limiares_invertidos (test_bateria.TestBateria.test_rejeita_limiares_invertidos) ... ok
+test_rejeita_origem_e_adaptador_invalidos (test_bateria.TestBateria.test_rejeita_origem_e_adaptador_invalidos) ... ok
+test_sem_configuracao_nao_acessa_sensor (test_bateria.TestBateria.test_sem_configuracao_nao_acessa_sensor) ... ok
+test_sem_sensor (test_bateria.TestBateria.test_sem_sensor) ... ok
+test_telemetria_compativel_sem_campos_inventados (test_bateria.TestBateria.test_telemetria_compativel_sem_campos_inventados) ... ok
+test_tensao_acima_do_pacote (test_bateria.TestBateria.test_tensao_acima_do_pacote) ... ok
+test_serial_heartbeat_partial_writes_and_cleanup (test_board_smoke.BoardSmokeTests.test_serial_heartbeat_partial_writes_and_cleanup) ... ok
+test_wifi_heartbeat_and_cleanup_without_uart (test_board_smoke.BoardSmokeTests.test_wifi_heartbeat_and_cleanup_without_uart) ... ok
+test_configuracao_ativa_em_nivel_alto (test_button.TestButton.test_configuracao_ativa_em_nivel_alto) ... ok
+test_configuracao_ativa_em_nivel_baixo (test_button.TestButton.test_configuracao_ativa_em_nivel_baixo) ... ok
+test_dois_acionamentos_separados_geram_dois_eventos (test_button.TestButton.test_dois_acionamentos_separados_geram_dois_eventos) ... ok
+test_primeiro_acionamento_apos_criacao_nao_e_descartado (test_button.TestButton.test_primeiro_acionamento_apos_criacao_nao_e_descartado) ... ok
+test_repique_apos_consumir_ainda_e_ignorado (test_button.TestButton.test_repique_apos_consumir_ainda_e_ignorado) ... ok
+test_repique_dentro_da_janela_conta_uma_vez (test_button.TestButton.test_repique_dentro_da_janela_conta_uma_vez) ... ok
+test_rotina_de_interrupcao_so_marca_flag (test_button.TestButton.test_rotina_de_interrupcao_so_marca_flag) ... ok
+test_um_acionamento_gera_um_evento (test_button.TestButton.test_um_acionamento_gera_um_evento) ... ok
+test_config_confirmada_inicia_desabilitada (test_inicializacao.TestInicializacao.test_config_confirmada_inicia_desabilitada) ... ok
+test_config_controle_invalida_desabilita (test_inicializacao.TestInicializacao.test_config_controle_invalida_desabilita) ... ok
+test_config_exemplo_bloqueia_hardware (test_inicializacao.TestInicializacao.test_config_exemplo_bloqueia_hardware) ... ok
+test_atrasos_invalidos_param (test_motores.TestMotores.test_atrasos_invalidos_param) ... ok
+test_boot_e_habilitacao_nao_movimentam (test_motores.TestMotores.test_boot_e_habilitacao_nao_movimentam) ... ok
+test_comando_desabilitado_e_rejeitado (test_motores.TestMotores.test_comando_desabilitado_e_rejeitado) ... ok
+test_configuracao_invalida_param (test_motores.TestMotores.test_configuracao_invalida_param) ... ok
+test_deadband_nao_cria_impulso_minimo (test_motores.TestMotores.test_deadband_nao_cria_impulso_minimo) ... ok
+test_entradas_invalidas_param (test_motores.TestMotores.test_entradas_invalidas_param) ... ok
+test_falha_de_escrita_desabilita (test_motores.TestMotores.test_falha_de_escrita_desabilita) ... ok
+test_limite_rampa_e_rodas_independentes (test_motores.TestMotores.test_limite_rampa_e_rodas_independentes) ... ok
+test_reversao_passa_por_zero_e_aguarda_pausa (test_motores.TestMotores.test_reversao_passa_por_zero_e_aguarda_pausa) ... ok
+test_stop_e_imediato_e_descarta_alvo (test_motores.TestMotores.test_stop_e_imediato_e_descarta_alvo) ... ok
+test_stop_enable_nao_burla_pausa (test_motores.TestMotores.test_stop_enable_nao_burla_pausa) ... ok
+test_avanco_e_re_com_tempo_real (test_odometria.TestOdometria.test_avanco_e_re_com_tempo_real) ... ok
+test_curva_com_duas_rodas_em_movimento (test_odometria.TestOdometria.test_curva_com_duas_rodas_em_movimento) ... ok
+test_giro_no_proprio_eixo (test_odometria.TestOdometria.test_giro_no_proprio_eixo) ... ok
+test_overflow_nos_dois_sentidos (test_odometria.TestOdometria.test_overflow_nos_dois_sentidos) ... ok
+test_parado (test_odometria.TestOdometria.test_parado) ... ok
+test_polaridade_e_geometria_independentes (test_odometria.TestOdometria.test_polaridade_e_geometria_independentes) ... ok
+test_primeira_amostra_nao_inventa_velocidade (test_odometria.TestOdometria.test_primeira_amostra_nao_inventa_velocidade) ... ok
+test_rejeita_configuracao_invalida (test_odometria.TestOdometria.test_rejeita_configuracao_invalida) ... ok
+test_rejeita_contagem_fracionaria (test_odometria.TestOdometria.test_rejeita_contagem_fracionaria) ... ok
+test_rejeita_delta_ambiguo_sem_mudar_pose (test_odometria.TestOdometria.test_rejeita_delta_ambiguo_sem_mudar_pose) ... ok
+test_rejeita_tempo_invalido_sem_consumir_contagens (test_odometria.TestOdometria.test_rejeita_tempo_invalido_sem_consumir_contagens) ... ok
+test_reset_explicito_preserva_pose (test_odometria.TestOdometria.test_reset_explicito_preserva_pose) ... ok
+test_roda_parada_descreve_arco (test_odometria.TestOdometria.test_roda_parada_descreve_arco) ... ok
+test_ticks_diff_com_wrap (test_odometria.TestOdometria.test_ticks_diff_com_wrap) ... ok
+test_volta_completa_nao_desloca_centro (test_odometria.TestOdometria.test_volta_completa_nao_desloca_centro) ... ok
+test_pulsos_simulados_alimentam_odometria (test_odometria.TestQuadratura.test_pulsos_simulados_alimentam_odometria) ... ok
+test_quatro_bordas_por_ciclo_e_reversao (test_odometria.TestQuadratura.test_quatro_bordas_por_ciclo_e_reversao) ... ok
+test_sinal_estavel_nao_conta (test_odometria.TestQuadratura.test_sinal_estavel_nao_conta) ... ok
+test_transicao_invalida_ressincroniza (test_odometria.TestQuadratura.test_transicao_invalida_ressincroniza) ... ok
+test_config_ausente_nao_importa_machine (test_ponte_pwm.TestPonte.test_config_ausente_nao_importa_machine) ... ok
+test_config_invalida_nao_toca_gpio_param (test_ponte_pwm.TestPonte.test_config_invalida_nao_toca_gpio_param) ... ok
+test_duty_invalido_para_ambos (test_ponte_pwm.TestPonte.test_duty_invalido_para_ambos) ... ok
+test_falha_em_pwm_ainda_desabilita_outro_motor (test_ponte_pwm.TestPonte.test_falha_em_pwm_ainda_desabilita_outro_motor) ... ok
+test_primeiro_sinal_desabilita_enable_param (test_ponte_pwm.TestPonte.test_primeiro_sinal_desabilita_enable_param) ... ok
+test_pwm_sentido_e_ordem_dos_sinais (test_ponte_pwm.TestPonte.test_pwm_sentido_e_ordem_dos_sinais) ... ok
+test_autoverificacao_falha_permanece_em_idle (test_state_machine.TestBootEArmar.test_autoverificacao_falha_permanece_em_idle) ... ok
+test_autoverificacao_ok_leva_a_ready (test_state_machine.TestBootEArmar.test_autoverificacao_ok_leva_a_ready) ... ok
+test_boot_inicia_em_idle_com_motores_parados (test_state_machine.TestBootEArmar.test_boot_inicia_em_idle_com_motores_parados) ... ok
+test_excecao_na_autoverificacao_leva_a_fault (test_state_machine.TestBootEArmar.test_excecao_na_autoverificacao_leva_a_fault) ... ok
+test_falha_de_motores_no_boot_leva_a_fault (test_state_machine.TestBootEArmar.test_falha_de_motores_no_boot_leva_a_fault) ... ok
+test_estol (test_state_machine.TestFalhas.test_estol) ... ok
+test_excecao_no_loop_para_motores (test_state_machine.TestFalhas.test_excecao_no_loop_para_motores) ... ok
+test_falha_de_callback_nao_afeta_seguranca (test_state_machine.TestFalhas.test_falha_de_callback_nao_afeta_seguranca) ... ok
+test_sem_estol_se_encoder_se_move (test_state_machine.TestFalhas.test_sem_estol_se_encoder_se_move) ... ok
+test_sensor_frontal_critico (test_state_machine.TestFalhas.test_sensor_frontal_critico) ... ok
+test_sensor_frontal_sem_leitura_por_tempo_demais (test_state_machine.TestFalhas.test_sensor_frontal_sem_leitura_por_tempo_demais) ... ok
+test_timeout_de_corrida (test_state_machine.TestFalhas.test_timeout_de_corrida) ... ok
+test_latencia_de_parada_e_registrada (test_state_machine.TestLatenciaDeParada.test_latencia_de_parada_e_registrada) ... ok
+test_latencia_na_parada_por_botao (test_state_machine.TestLatenciaDeParada.test_latencia_na_parada_por_botao) ... ok
+test_reset_por_watchdog_nao_reativa_motores (test_state_machine.TestRecuperacaoEWatchdog.test_reset_por_watchdog_nao_reativa_motores) ... ok
+test_sair_de_fault_exige_acao_explicita_e_novo_start (test_state_machine.TestRecuperacaoEWatchdog.test_sair_de_fault_exige_acao_explicita_e_novo_start) ... ok
+test_saude_do_loop_controla_alimentacao_do_watchdog (test_state_machine.TestRecuperacaoEWatchdog.test_saude_do_loop_controla_alimentacao_do_watchdog) ... ok
+test_comando_remoto_em_modo_local_e_ignorado (test_state_machine.TestTelemetriaEComandoRemoto.test_comando_remoto_em_modo_local_e_ignorado) ... ok
+test_modo_local_ignora_perda_de_telemetria (test_state_machine.TestTelemetriaEComandoRemoto.test_modo_local_ignora_perda_de_telemetria) ... ok
+test_modo_remoto_com_heartbeat_continua (test_state_machine.TestTelemetriaEComandoRemoto.test_modo_remoto_com_heartbeat_continua) ... ok
+test_modo_remoto_sem_heartbeat_para_o_movimento (test_state_machine.TestTelemetriaEComandoRemoto.test_modo_remoto_sem_heartbeat_para_o_movimento) ... ok
+test_botao_em_idle_e_ignorado (test_state_machine.TestTransicoes.test_botao_em_idle_e_ignorado) ... ok
+test_chegada_leva_a_finished_e_para_motores (test_state_machine.TestTransicoes.test_chegada_leva_a_finished_e_para_motores) ... ok
+test_ciclo_normal_com_botao (test_state_machine.TestTransicoes.test_ciclo_normal_com_botao) ... ok
+test_novo_start_apos_stopped_exige_duas_acoes (test_state_machine.TestTransicoes.test_novo_start_apos_stopped_exige_duas_acoes) ... ok
+test_start_em_estado_invalido_e_ignorado (test_state_machine.TestTransicoes.test_start_em_estado_invalido_e_ignorado) ... ok
+test_absent_consumer_bounds_memory_and_retains_critical_events (test_telemetry.TelemetryTests.test_absent_consumer_bounds_memory_and_retains_critical_events) ... ok
+test_all_critical_saturation_rejects_newest_and_counts_it (test_telemetry.TelemetryTests.test_all_critical_saturation_rejects_newest_and_counts_it) ... ok
+test_demo_matches_receiver_contract_when_host_dependency_available (test_telemetry.TelemetryTests.test_demo_matches_receiver_contract_when_host_dependency_available) ... skipped 'optional host contract check: set PYTHONPATH=src/telemetria and install host deps'
+test_disconnect_mid_frame_replays_whole_frame_on_new_stream (test_telemetry.TelemetryTests.test_disconnect_mid_frame_replays_whole_frame_on_new_stream) ... ok
+test_invalid_and_nonfinite_measurements_are_rejected (test_telemetry.TelemetryTests.test_invalid_and_nonfinite_measurements_are_rejected) ... ok
+test_invalid_byte_count_disconnects_without_advancing (test_telemetry.TelemetryTests.test_invalid_byte_count_disconnects_without_advancing) ... ok
+test_map_update_and_run_requirements (test_telemetry.TelemetryTests.test_map_update_and_run_requirements) ... ok
+test_none_and_eagain_make_no_progress_or_loss (test_telemetry.TelemetryTests.test_none_and_eagain_make_no_progress_or_loss) ... ok
+test_partial_noncritical_frame_is_pinned_even_for_critical (test_telemetry.TelemetryTests.test_partial_noncritical_frame_is_pinned_even_for_critical) ... ok
+test_partial_writer_never_interleaves_lines_and_obeys_budget (test_telemetry.TelemetryTests.test_partial_writer_never_interleaves_lines_and_obeys_budget) ... ok
+test_payload_bound_counts_encoded_utf8_and_excludes_lf (test_telemetry.TelemetryTests.test_payload_bound_counts_encoded_utf8_and_excludes_lf) ... ok
+test_sample_10hz_and_no_catchup_bursts (test_telemetry.TelemetryTests.test_sample_10hz_and_no_catchup_bursts) ... ok
+test_service_makes_one_write_only (test_telemetry.TelemetryTests.test_service_makes_one_write_only) ... ok
+test_simulated_demo_labels_sources_and_rates (test_telemetry.TelemetryTests.test_simulated_demo_labels_sources_and_rates) ... ok
+test_slow_consumer_keeps_controller_progressing (test_telemetry.TelemetryTests.test_slow_consumer_keeps_controller_progressing) ... ok
+test_stats_exact_shape_and_snapshot (test_telemetry.TelemetryTests.test_stats_exact_shape_and_snapshot) ... ok
+test_time_and_seq_remain_monotonic_between_runs (test_telemetry.TelemetryTests.test_time_and_seq_remain_monotonic_between_runs) ... ok
+test_timestamp_and_sequence_safe_integer_limits (test_telemetry.TelemetryTests.test_timestamp_and_sequence_safe_integer_limits) ... ok
+test_wrapping_ticks_are_extended (test_telemetry.TelemetryTests.test_wrapping_ticks_are_extended) ... ok
+test_writer_replacement_without_intermediate_service_restarts_frame (test_telemetry.TelemetryTests.test_writer_replacement_without_intermediate_service_restarts_frame) ... ok
+test_wifi_telemetry (unittest.loader._FailedTest.test_wifi_telemetry) ... ERROR
+
+======================================================================
+ERROR: test_wifi_telemetry (unittest.loader._FailedTest.test_wifi_telemetry)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_wifi_telemetry
+Traceback (most recent call last):
+  File "C:\Users\negre\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Users\negre\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\negre\repos\PI\tmp\dev-audit\src\firmware\..\firmware\test_wifi_telemetry.py", line 111, in <module>
+    class FakeSelect:
+    ...<5 lines>...
+        poll = FakePoll
+  File "C:\Users\negre\repos\PI\tmp\dev-audit\src\firmware\..\firmware\test_wifi_telemetry.py", line 112, in FakeSelect
+    POLLIN = select.POLLIN
+             ^^^^^^^^^^^^^
+AttributeError: module 'select' has no attribute 'POLLIN'
+
+
+----------------------------------------------------------------------
+Ran 119 tests in 0.187s
+
+FAILED (errors=1, skipped=1)

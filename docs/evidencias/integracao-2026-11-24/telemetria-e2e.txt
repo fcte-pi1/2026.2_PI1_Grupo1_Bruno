@@ -1,0 +1,13 @@
+Comando: python -B -m pytest -o addopts= -v src/telemetria/tests/test_integracao_firmware.py
+Limite externo: 40 segundos.
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.2.0, pluggy-1.7.0 -- [caminho local do interpretador omitido]
+cachedir: .pytest_cache
+rootdir: C:\Users\negre\repos\PI\tmp\entrega-integracao\src\telemetria
+configfile: pyproject.toml
+plugins: asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 2 items
+
+src\telemetria\tests\test_integracao_firmware.py::test_firmware_tcp_ate_estado_e_captura_sem_trocar_corrida[1]
+TIMEOUT_EXTERNO=40s; execução encerrada sem resultado conclusivo.

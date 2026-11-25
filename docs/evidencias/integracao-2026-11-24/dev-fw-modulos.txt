@@ -1,0 +1,28 @@
+test_encoder_acumula_e_reseta (test_fw02.TestFW02.test_encoder_acumula_e_reseta) ... ok
+test_imu_simulada (test_fw02.TestFW02.test_imu_simulada) ... ok
+test_motor_limita_comandos_e_para (test_fw02.TestFW02.test_motor_limita_comandos_e_para) ... ok
+test_sensor_pode_simular_timeout (test_fw02.TestFW02.test_sensor_pode_simular_timeout) ... ok
+test_calibracao_imu_remove_zero_inicial (test_fw06.TestFW06.test_calibracao_imu_remove_zero_inicial) ... ok
+test_fora_da_faixa_retorna_invalido (test_fw06.TestFW06.test_fora_da_faixa_retorna_invalido) ... ok
+test_imu_invalida_sem_amostras (test_fw06.TestFW06.test_imu_invalida_sem_amostras) ... ok
+test_leitura_sequencial_das_quatro_posicoes (test_fw06.TestFW06.test_leitura_sequencial_das_quatro_posicoes) ... ok
+test_mediana_rejeita_leitura_isolada (test_fw06.TestFW06.test_mediana_rejeita_leitura_isolada) ... ok
+test_timeout_retorna_invalido (test_fw06.TestFW06.test_timeout_retorna_invalido) ... ok
+test_avanco_confirmado_atualiza_posicao (test_fw11.TestFW11MapPosition.test_avanco_confirmado_atualiza_posicao) ... ok
+test_avanco_nao_atualiza_posicao_quando_existe_parede (test_fw11.TestFW11MapPosition.test_avanco_nao_atualiza_posicao_quando_existe_parede) ... ok
+test_caminho_livre_compartilhado (test_fw11.TestFW11MapPosition.test_caminho_livre_compartilhado) ... ok
+test_cria_mapa_4x4_com_bordas_fechadas (test_fw11.TestFW11MapPosition.test_cria_mapa_4x4_com_bordas_fechadas) ... ok
+test_direcoes_relativas_respeitam_orientacao (test_fw11.TestFW11MapPosition.test_direcoes_relativas_respeitam_orientacao) ... ok
+test_objetivo (test_fw11.TestFW11MapPosition.test_objetivo) ... ok
+test_orientacao_so_muda_apos_giro_confirmado (test_fw11.TestFW11MapPosition.test_orientacao_so_muda_apos_giro_confirmado) ... ok
+test_parede_compartilhada_e_atualizada_dos_dois_lados (test_fw11.TestFW11MapPosition.test_parede_compartilhada_e_atualizada_dos_dois_lados) ... ok
+test_posicao_inicial_e_celula_visitada (test_fw11.TestFW11MapPosition.test_posicao_inicial_e_celula_visitada) ... ok
+test_chega_ao_objetivo_e_para (test_fw13.TestFW13.test_chega_ao_objetivo_e_para) ... ok
+test_falha_do_movimento_nao_atualiza_posicao (test_fw13.TestFW13.test_falha_do_movimento_nao_atualiza_posicao) ... ok
+test_sem_rota_causa_parada (test_fw13.TestFW13.test_sem_rota_causa_parada) ... ok
+test_sensor_frontal_invalido_causa_parada_segura (test_fw13.TestFW13.test_sensor_frontal_invalido_causa_parada_segura) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.005s
+
+OK

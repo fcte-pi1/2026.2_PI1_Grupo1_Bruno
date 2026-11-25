@@ -1,0 +1,26 @@
+test_calibracao_nao_aceita_medicao_nula_ou_sinal_incoerente (test_calibracao.TestCalibracao.test_calibracao_nao_aceita_medicao_nula_ou_sinal_incoerente) ... ok
+test_cli_csv_ate_json (test_calibracao.TestCalibracao.test_cli_csv_ate_json) ... ok
+test_contadores_nao_podem_diminuir (test_calibracao.TestCalibracao.test_contadores_nao_podem_diminuir) ... ok
+test_corrente_ausente_nao_inventa_consumo (test_calibracao.TestCalibracao.test_corrente_ausente_nao_inventa_consumo) ... ok
+test_csv_cabecalho_e_colunas (test_calibracao.TestCalibracao.test_csv_cabecalho_e_colunas) ... ok
+test_diametro_por_referencia_externa (test_calibracao.TestCalibracao.test_diametro_por_referencia_externa) ... ok
+test_distancia_rodas_corrigida (test_calibracao.TestCalibracao.test_distancia_rodas_corrigida) ... ok
+test_dois_pontos_distantes_nao_comprovam_operacao_continua (test_calibracao.TestCalibracao.test_dois_pontos_distantes_nao_comprovam_operacao_continua) ... ok
+test_ensaio_curto (test_calibracao.TestCalibracao.test_ensaio_curto) ... ok
+test_erros_dispersao_e_sucesso (test_calibracao.TestCalibracao.test_erros_dispersao_e_sucesso) ... ok
+test_falha_colisao_e_desvio_reprovam_mesmo_com_alvo_correto (test_calibracao.TestCalibracao.test_falha_colisao_e_desvio_reprovam_mesmo_com_alvo_correto) ... ok
+test_formulario_vazio_nao_e_evidencia (test_calibracao.TestCalibracao.test_formulario_vazio_nao_e_evidencia) ... ok
+test_giro_nao_esconde_volta_extra (test_calibracao.TestCalibracao.test_giro_nao_esconde_volta_extra) ... ok
+test_nao_mistura_controles_origens_tipos_ou_alvos (test_calibracao.TestCalibracao.test_nao_mistura_controles_origens_tipos_ou_alvos) ... ok
+test_potencia_variavel_usando_integracao_trapezoidal (test_calibracao.TestCalibracao.test_potencia_variavel_usando_integracao_trapezoidal) ... ok
+test_rejeita_amostras_invalidas (test_calibracao.TestCalibracao.test_rejeita_amostras_invalidas) ... ok
+test_rejeita_movimento_invalido (test_calibracao.TestCalibracao.test_rejeita_movimento_invalido) ... ok
+test_reset_queda_parada_e_limites_impedem_aprovacao (test_calibracao.TestCalibracao.test_reset_queda_parada_e_limites_impedem_aprovacao) ... ok
+test_tempo_duplicado_reverso_ou_origem_mista (test_calibracao.TestCalibracao.test_tempo_duplicado_reverso_ou_origem_mista) ... ok
+test_trinta_minutos_e_energia_trapezoidal (test_calibracao.TestCalibracao.test_trinta_minutos_e_energia_trapezoidal) ... ok
+test_um_ensaio_nao_inventa_dispersao (test_calibracao.TestCalibracao.test_um_ensaio_nao_inventa_dispersao) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.099s
+
+OK
